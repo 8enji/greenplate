@@ -13,6 +13,12 @@
         android:theme="@style/Theme.GreenPlate"
         tools:targetApi="31">
         <activity
+            android:name=".views.AccountCreateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.UserLogin"
+            android:exported="false" />
+        <activity
             android:name=".views.HomeScreen"
             android:exported="false" />
         <activity
