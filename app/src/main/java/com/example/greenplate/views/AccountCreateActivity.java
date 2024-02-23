@@ -18,36 +18,35 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import com.example.greenplate.R;
 
-public class UserLogin extends AppCompatActivity {
+public class AccountCreateActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private Button buttonLogin;
     private Button buttonCreate;
-    private Button buttonExit;
+    private Button buttonBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_login);
+        setContentView(R.layout.activity_account_create);
 
         mAuth = FirebaseAuth.getInstance();
 
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
-        buttonLogin = findViewById(R.id.buttonLogin);
         buttonCreate = findViewById(R.id.buttonCreate);
-        buttonExit = findViewById(R.id.buttonExit);
+        buttonBack = findViewById(R.id.buttonBack);
 
         buttonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UserLogin.this, AccountCreateActivity.class);
-                startActivity(intent);
+                String email = editTextEmail.getText().toString();
+                String password = editTextPassword.getText().toString();
+                createUser(email, password);
             }
         });
 
-        buttonExit.setOnClickListener(new View.OnClickListener() {
+        buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -55,20 +54,9 @@ public class UserLogin extends AppCompatActivity {
             }
         });
 
-
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = editTextEmail.getText().toString();
-                String password = editTextPassword.getText().toString();
-                login(email, password);
-            }
-        });
     }
 
-
-
-    private void login(String email, String password) {
+    private void createUser(String email, String password) {
         if (email.isEmpty()) {
             editTextEmail.setError("Email is required");
             editTextEmail.requestFocus();
@@ -81,20 +69,20 @@ public class UserLogin extends AppCompatActivity {
             return;
         }
 
-        mAuth.signInWithEmailAndPassword(email, password)
+        mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Login successful
-                            Log.d("LoginActivity", "signInWithEmail:success");
-                            Toast.makeText(UserLogin.this, "Login successful", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(UserLogin.this, HomeScreen.class);
-                            startActivity(intent);
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("AccountCreateActivity", "createUserWithEmail:success");
+                            Toast.makeText(AccountCreateActivity.this, "Account created.",
+                                    Toast.LENGTH_SHORT).show();
                         } else {
-                            // Login failed
-                            Log.w("LoginActivity", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(UserLogin.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            // If sign in fails, display a message to the user.
+                            Log.d("AccountCreateActivity", "createUserWithEmail:failed");
+                            Toast.makeText(AccountCreateActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
