@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1013702603397",
+    "project_id": "cs2340-greenplate",
+    "storage_bucket": "cs2340-greenplate.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013702603397:android:a18215cb2db35d71bf6fec",
+        "android_client_info": {
+          "package_name": "com.example.greenplate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaba87xS7QviDt4m34WEm1Rg1oVUPtpNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
