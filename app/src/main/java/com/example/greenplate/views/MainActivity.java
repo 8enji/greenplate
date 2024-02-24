@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openShoppingList() {
-        Intent intent = new Intent(this, ShoppingList.class);
+        Intent intent = new Intent(this, UserLogin.class);
         startActivity(intent);
     }
 
