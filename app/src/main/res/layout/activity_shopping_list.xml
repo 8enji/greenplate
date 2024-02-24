@@ -31,19 +31,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
 
-    <com.google.android.material.chip.ChipGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="126dp"
-        tools:layout_editor_absoluteY="101dp">
-
-    </com.google.android.material.chip.ChipGroup>
-
-    <com.google.android.material.chip.ChipGroup
-        android:layout_width="2dp"
-        android:layout_height="0dp"
-        tools:layout_editor_absoluteX="111dp"
-        tools:layout_editor_absoluteY="119dp">
-
-    </com.google.android.material.chip.ChipGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>
