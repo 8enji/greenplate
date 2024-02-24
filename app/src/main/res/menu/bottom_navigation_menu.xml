@@ -3,10 +3,21 @@
         android:id="@+id/item_1"
         android:enabled="true"
         android:icon="@android:drawable/ic_dialog_dialer"
-        android:title="ShoppingList" />
+        android:title="ShoppingList"
+        android:visible="true" />
     <item
         android:id="@+id/item_2"
         android:enabled="true"
         android:icon="@drawable/common_full_open_on_phone"
-        android:title="RecipeScreen"/>
+        android:title="Recipes"/>
+    <item
+        android:id="@+id/item_3"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="Ingredients"/>
+    <item
+        android:id="@+id/item_4"
+        android:enabled="true"
+        android:icon="@drawable/baseline_add_box_24"
+        android:title="InputMeal"/>
 </menu>
