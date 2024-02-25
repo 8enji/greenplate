@@ -13,15 +13,6 @@
         android:theme="@style/Theme.GreenPlate"
         tools:targetApi="31">
         <activity
-            android:name=".views.InputMeal"
-            android:exported="false" />
-        <activity
-            android:name=".views.ShoppingList"
-            android:exported="false" />
-        <activity
-            android:name=".views.MainActivity"
-            android:exported="true">
-        <activity
           android:name=".views.SplashScreen"
             android:exported="true">
             <intent-filter>
@@ -29,6 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".views.InputMeal"
+            android:exported="false" />
         <activity
             android:name=".views.AccountCreateActivity"
             android:exported="false" />
