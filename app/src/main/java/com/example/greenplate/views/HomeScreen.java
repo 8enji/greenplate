@@ -24,6 +24,15 @@ public class HomeScreen extends AppCompatActivity {
                 if (item.getItemId() == R.id.item_1) {
                     Intent intent = new Intent(HomeScreen.this, ShoppingList.class);
                     startActivity(intent);
+                } else if (item.getItemId() == R.id.item_2) {
+                    Intent intent = new Intent(HomeScreen.this, RecipeScreen.class);
+                    startActivity(intent);
+                } else if (item.getItemId() == R.id.item_2) {
+                    Intent intent = new Intent(HomeScreen.this, IngredientScreen.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(HomeScreen.this, InputMeal.class);
+                    startActivity(intent);
                 }
                 return false;
             }
