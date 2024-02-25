@@ -20,7 +20,7 @@
             android:exported="false" />
         <activity
             android:name=".views.MainActivity"
-            android:exported="true">
+            android:exported="true"/>
         <activity
           android:name=".views.SplashScreen"
             android:exported="true">
@@ -38,13 +38,5 @@
         <activity
             android:name=".views.HomeScreen"
             android:exported="false" />
-        <activity
-            android:name=".views.ShoppingList"
-            android:exported="false" />
-        <activity
-            android:name=".views.MainActivity"
-            android:exported="false">
-        </activity>
     </application>
-
 </manifest>
