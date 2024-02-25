@@ -22,13 +22,18 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openShoppingList();
+                openInputMeal();
             }
         });
     }
 
     public void openShoppingList() {
         Intent intent = new Intent(this, UserLogin.class);
+        startActivity(intent);
+    }
+
+    public void openInputMeal() {
+        Intent intent = new Intent(this, InputMeal.class);
         startActivity(intent);
     }
 
