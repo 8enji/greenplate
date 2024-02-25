@@ -32,5 +32,11 @@
         <activity
             android:name=".views.HomeScreen"
             android:exported="false" />
+        <activity
+            android:name=".views.ShoppingList"
+            android:exported="false" />
+        <activity
+            android:name=".views.MainActivity"
+            android:exported="true"/>
     </application>
 </manifest>
