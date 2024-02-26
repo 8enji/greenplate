@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/shoppingnav"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_dialog_dialer"
+        android:title="ShoppingList"
+        android:visible="true" />
+    <item
+        android:id="@+id/recipenav"
+        android:enabled="true"
+        android:icon="@drawable/outline_checklist_24"
+        android:title="Recipes"/>
+    <item
+        android:id="@+id/ingredientnav"
+        android:enabled="true"
+        android:icon="@drawable/baseline_brunch_dining_24"
+        android:title="Ingredients"/>
+    <item
+        android:id="@+id/inputmealnav"
+        android:enabled="true"
+        android:icon="@drawable/baseline_add_box_24"
+        android:title="InputMeal"/>
+</menu>
