@@ -52,7 +52,8 @@ public class UserLogin extends AppCompatActivity {
 
             @Override
             public void onFailure(String error) {
-                Toast.makeText(UserLogin.this, "Authentication failed: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserLogin.this,
+                        "Authentication failed: " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }

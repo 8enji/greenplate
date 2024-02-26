@@ -37,13 +37,15 @@ public class AccountCreateActivity extends AppCompatActivity {
         viewModel.createUser(email, password, new AccountCreateViewModel.AuthCallback() {
             @Override
             public void onSuccess() {
-                Toast.makeText(AccountCreateActivity.this, "Account created", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AccountCreateActivity.this,
+                        "Account created", Toast.LENGTH_SHORT).show();
                 finish();
             }
 
             @Override
             public void onFailure(String error) {
-                Toast.makeText(AccountCreateActivity.this, "Account creation failed: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AccountCreateActivity.this,
+                        "Account creation failed: " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }

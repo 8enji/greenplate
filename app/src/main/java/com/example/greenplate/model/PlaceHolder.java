@@ -1,4 +1,4 @@
 package com.example.greenplate.model;
 
-public class throwaway {
+public class PlaceHolder {
 }

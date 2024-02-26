@@ -10,8 +10,8 @@ import com.example.greenplate.R;
 public class SplashScreen extends AppCompatActivity {
 
     // Splash Screen Implementation Variables
-    Handler handler = new Handler();
-    int milliDelay = 3000;
+    private Handler handler = new Handler();
+    private int milliDelay = 3000;
 
     // Splash Screen Implementation Function
     @Override
