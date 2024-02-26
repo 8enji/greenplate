@@ -14,6 +14,8 @@ public class AccountCreateActivity extends AppCompatActivity {
     private AccountCreateViewModel viewModel;
     private EditText editTextEmail;
     private EditText editTextPassword;
+    private Button buttonCreate;
+    private Button buttonBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +26,17 @@ public class AccountCreateActivity extends AppCompatActivity {
 
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
-        Button buttonCreate = findViewById(R.id.buttonCreate);
+        buttonCreate = findViewById(R.id.buttonCreate);
+        buttonBack = findViewById(R.id.buttonBack);
 
         buttonCreate.setOnClickListener(v -> {
             String email = editTextEmail.getText().toString();
             String password = editTextPassword.getText().toString();
             createUser(email, password);
+        });
+
+        buttonBack.setOnClickListener(v -> {
+            finish();
         });
     }
 
