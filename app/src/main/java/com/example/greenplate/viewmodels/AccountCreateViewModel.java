@@ -16,6 +16,11 @@ public class AccountCreateViewModel extends ViewModel {
             callback.onFailure("Email and password are required");
             return;
         }
+        if (password.contains(" ")) {
+            // Password contains whitespace
+            callback.onFailure("Password cannot contain whitespace");
+            return;
+        }
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
