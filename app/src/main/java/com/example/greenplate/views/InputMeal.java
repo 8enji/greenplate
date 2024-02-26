@@ -32,7 +32,7 @@ public class InputMeal extends AppCompatActivity {
                 } else if (item.getItemId() == R.id.ingredientnav) {
                     Intent intent = new Intent(InputMeal.this, IngredientScreen.class);
                     startActivity(intent);
-                } else if(item.getItemId() == R.id.inputmealnav) {
+                } else if (item.getItemId() == R.id.inputmealnav) {
                     Intent intent = new Intent(InputMeal.this, InputMeal.class);
                     startActivity(intent);
                 }

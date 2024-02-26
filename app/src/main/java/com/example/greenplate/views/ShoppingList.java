@@ -32,7 +32,7 @@ public class ShoppingList extends AppCompatActivity {
                 } else if (item.getItemId() == R.id.ingredientnav) {
                     Intent intent = new Intent(ShoppingList.this, IngredientScreen.class);
                     startActivity(intent);
-                } else if (item.getItemId() == R.id.inputmealnav){
+                } else if (item.getItemId() == R.id.inputmealnav) {
                     Intent intent = new Intent(ShoppingList.this, InputMeal.class);
                     startActivity(intent);
                 }
