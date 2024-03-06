@@ -1,33 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.InputMeal">
 
+    <TextView
+        android:id="@+id/textViewInputMeal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Input Meal"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#000000"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_navigation_menu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="651dp" />
+        app:menu="@menu/bottom_navigation_menu" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textViewMealName"
+        android:layout_width="120dp"
+        android:layout_height="41dp"
+        android:layout_below="@id/textViewInputMeal"
+        android:text="Meal Name"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textViewCalories"
+        android:layout_width="136dp"
+        android:layout_height="41dp"
+        android:layout_below="@id/textViewMealName"
+        android:layout_marginTop="1dp"
+        android:text="# of Calories"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/editTextMealName"
+        android:layout_width="248dp"
+        android:layout_height="41dp"
+        android:layout_below="@id/textViewInputMeal"
+        android:layout_toRightOf="@id/textViewMealName"
+        android:textSize="20sp"
+        tools:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/editTextCalories"
+        android:layout_width="248dp"
+        android:layout_height="41dp"
+        android:layout_below="@id/editTextMealName"
+        android:layout_toRightOf="@id/textViewMealName"
+        android:textSize="20sp"
+        tools:textSize="20sp" />
+
+    <Button
+        android:id="@+id/buttonAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Input Meal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_below="@id/textViewCalories"
+        android:layout_alignParentRight="true"
+        android:text="Add"/>
+
+</RelativeLayout>
