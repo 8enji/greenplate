@@ -33,6 +33,9 @@ public class IngredientScreen extends AppCompatActivity {
                 } else if (item.getItemId() == R.id.inputmealnav) {
                     Intent intent = new Intent(IngredientScreen.this, InputMeal.class);
                     startActivity(intent);
+                } else if (item.getItemId() == R.id.personalinfonav) {
+                    Intent intent = new Intent(IngredientScreen.this, PersonalInfoScreen.class);
+                    startActivity(intent);
                 }
                 return false;
             }

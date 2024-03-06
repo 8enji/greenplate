@@ -20,4 +20,9 @@
         android:enabled="true"
         android:icon="@drawable/baseline_add_box_24"
         android:title="InputMeal"/>
+    <item
+        android:id="@+id/personalinfonav"
+        android:enabled="true"
+        android:icon="@drawable/baseline_account_box_24"
+        android:title="PersonalInfo"/>
 </menu>

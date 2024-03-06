@@ -35,6 +35,9 @@ public class ShoppingList extends AppCompatActivity {
                 } else if (item.getItemId() == R.id.inputmealnav) {
                     Intent intent = new Intent(ShoppingList.this, InputMeal.class);
                     startActivity(intent);
+                } else if (item.getItemId() == R.id.personalinfonav) {
+                    Intent intent = new Intent(ShoppingList.this, PersonalInfoScreen.class);
+                    startActivity(intent);
                 }
                 return false;
             }
