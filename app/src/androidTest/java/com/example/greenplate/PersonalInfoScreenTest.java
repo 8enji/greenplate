@@ -22,33 +22,50 @@ import com.example.greenplate.views.PersonalInfoScreen;
 @RunWith(AndroidJUnit4.class)
 public class PersonalInfoScreenTest {
 
+    /**
+     * NOTE: YOU CAN'T RUN BOTH TESTS AT THE SAME TIME, AS YOU NEED TO MAKE DIFFERENT ACCOUNTS.
+     */
     @Test
-    public void savePersonalInfo_VerifySharedPreferences() {
-        String testHeight = "72";
-        String testWeight = "160";
-        String testGender = "Male";
-
-        // Start PersonalInfoScreen activity
+    public void savePersonalInfo_VerifyDefaultValues() {
         ActivityScenario.launch(PersonalInfoScreen.class);
 
-        // Input test data into EditText fields and click the save button
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UserPersonalInfo", Context.MODE_PRIVATE);
+        String defaultHeight = sharedPreferences.getString("height", "0");
+        String defaultWeight = sharedPreferences.getString("weight", "0");
+        String defaultGender = sharedPreferences.getString("gender", "Not specified");
+
+        assertEquals("Default height value incorrect.", "0", defaultHeight);
+        assertEquals("Default weight value incorrect.", "0", defaultWeight);
+        assertEquals("Default gender value incorrect.", "Not specified", defaultGender);
+    }
+
+
+
+    @Test
+    public void savePersonalInfo_VerifyPersistenceAcrossSessions() {
+        String testHeight = "68";
+        String testWeight = "145";
+        String testGender = "Female";
+
+        ActivityScenario.launch(PersonalInfoScreen.class);
         onView(withId(R.id.editTextHeight)).perform(typeText(testHeight), closeSoftKeyboard());
         onView(withId(R.id.editTextWeight)).perform(typeText(testWeight), closeSoftKeyboard());
         onView(withId(R.id.editTextGender)).perform(typeText(testGender), closeSoftKeyboard());
         onView(withId(R.id.buttonSave)).perform(click());
 
-        // Fetch the context
+        ActivityScenario.launch(PersonalInfoScreen.class);
+
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        // Retrieve saved data from SharedPreferences
         SharedPreferences sharedPreferences = context.getSharedPreferences("UserPersonalInfo", Context.MODE_PRIVATE);
         String savedHeight = sharedPreferences.getString("height", "");
         String savedWeight = sharedPreferences.getString("weight", "");
         String savedGender = sharedPreferences.getString("gender", "");
 
-        // Verify the saved data matches the input
-        assertEquals("Failed to save or retrieve height correctly.", testHeight, savedHeight);
-        assertEquals("Failed to save or retrieve weight correctly.", testWeight, savedWeight);
-        assertEquals("Failed to save or retrieve gender correctly.", testGender, savedGender);
+        assertEquals("Height not persisted across sessions.", testHeight, savedHeight);
+        assertEquals("Weight not persisted across sessions.", testWeight, savedWeight);
+        assertEquals("Gender not persisted across sessions.", testGender, savedGender);
     }
 }
