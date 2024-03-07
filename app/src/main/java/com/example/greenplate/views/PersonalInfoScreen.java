@@ -37,6 +37,8 @@ public class PersonalInfoScreen extends AppCompatActivity {
         editTextGender = findViewById(R.id.editTextGender);
         buttonSave = findViewById(R.id.buttonSave);
 
+        loadPersonalInfo();
+
         // Set up the button click listener
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +74,6 @@ public class PersonalInfoScreen extends AppCompatActivity {
     }
 
     private void savePersonalInfo() {
-        System.out.println("Clicked on save button.");
         String height = editTextHeight.getText().toString();
         String weight = editTextWeight.getText().toString();
         String gender = editTextGender.getText().toString();
@@ -86,10 +87,18 @@ public class PersonalInfoScreen extends AppCompatActivity {
         editor.putString("gender", gender);
         editor.apply();
 
-        System.out.println(editTextHeight.getText().toString());
-
-
         Toast.makeText(this, "Information saved!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void loadPersonalInfo() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPersonalInfo", MODE_PRIVATE);
+        String height = sharedPreferences.getString("height", "");
+        String weight = sharedPreferences.getString("weight", "");
+        String gender = sharedPreferences.getString("gender", "");
+
+        editTextHeight.setText(height);
+        editTextWeight.setText(weight);
+        editTextGender.setText(gender);
     }
 
 }
