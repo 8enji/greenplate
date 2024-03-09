@@ -1,6 +1,8 @@
 package com.example.greenplate.viewmodels;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.greenplate.model.FirebaseDB;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -9,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,8 +68,30 @@ public class PersonalInfoViewModel extends ViewModel {
         }
     }
 
+    public void loadPersonalInfo(LoadPersonalInfoCallback callback) {
+        userRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Map<String, Object> personalInfo = document.getData();
+                    if (personalInfo.get("height") != null) {
+                        callback.onSuccess(personalInfo);
+                    }
+                } else {
+                    callback.onFailure("Document does not exist");
+                }
+            } else {
+                callback.onFailure("Failed to load personal info: " + task.getException().getMessage());
+            }
+        });
+    }
+
     public interface AuthCallback {
         void onSuccess();
+        void onFailure(String error);
+    }
+    public interface LoadPersonalInfoCallback {
+        void onSuccess(Map<String, Object> personalInfo);
         void onFailure(String error);
     }
 }

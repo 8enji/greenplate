@@ -19,6 +19,8 @@ import com.example.greenplate.viewmodels.PersonalInfoViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.Map;
+
 public class PersonalInfoScreen extends AppCompatActivity {
     private BottomNavigationView bottomNavigation;
     private PersonalInfoViewModel viewModel;
@@ -82,15 +84,6 @@ public class PersonalInfoScreen extends AppCompatActivity {
         String weight = editTextWeight.getText().toString();
         String gender = editTextGender.getText().toString();
 
-        // Using SharedPreferences to save the user's personal information
-        SharedPreferences sharedPreferences = getSharedPreferences("UserPersonalInfo", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putString("height", height);
-        editor.putString("weight", weight);
-        editor.putString("gender", gender);
-        editor.apply();
-
         viewModel.savePersonalInfo(height, weight, gender, new PersonalInfoViewModel.AuthCallback() {
             @Override
             public void onSuccess() {
@@ -108,14 +101,24 @@ public class PersonalInfoScreen extends AppCompatActivity {
     }
 
     private void loadPersonalInfo() {
-        SharedPreferences sharedPreferences = getSharedPreferences("UserPersonalInfo", MODE_PRIVATE);
-        String height = sharedPreferences.getString("height", "");
-        String weight = sharedPreferences.getString("weight", "");
-        String gender = sharedPreferences.getString("gender", "");
+        viewModel.loadPersonalInfo(new PersonalInfoViewModel.LoadPersonalInfoCallback() {
+            @Override
+            public void onSuccess(Map<String, Object> personalInfo) {
+                // Handle successful loading of personal information
+                // Update UI or perform any other actions
+                editTextHeight.setText(personalInfo.get("height").toString());
+                editTextWeight.setText(personalInfo.get("weight").toString());
+                editTextGender.setText(personalInfo.get("gender").toString());
+                Toast.makeText(PersonalInfoScreen.this,
+                        "Information saved", Toast.LENGTH_SHORT).show();
+            }
 
-        editTextHeight.setText(height);
-        editTextWeight.setText(weight);
-        editTextGender.setText(gender);
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(PersonalInfoScreen.this,
+                        "Load fail:  " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
