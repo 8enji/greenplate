@@ -2,6 +2,7 @@ package com.example.greenplate.views;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,11 +14,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.greenplate.R;
+import com.example.greenplate.viewmodels.InputMealViewModel;
+import com.example.greenplate.viewmodels.PersonalInfoViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class PersonalInfoScreen extends AppCompatActivity {
     private BottomNavigationView bottomNavigation;
+    private PersonalInfoViewModel viewModel;
 
     private EditText editTextHeight;
     private EditText editTextWeight;
@@ -29,7 +33,7 @@ public class PersonalInfoScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_info_screen);
-
+        viewModel = new ViewModelProvider(this).get(PersonalInfoViewModel.class);
 
         // Initialize the views
         editTextHeight = findViewById(R.id.editTextHeight);
@@ -87,7 +91,20 @@ public class PersonalInfoScreen extends AppCompatActivity {
         editor.putString("gender", gender);
         editor.apply();
 
-        Toast.makeText(this, "Information saved!", Toast.LENGTH_SHORT).show();
+        viewModel.savePersonalInfo(height, weight, gender, new PersonalInfoViewModel.AuthCallback() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(PersonalInfoScreen.this,
+                        "Information saved", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(PersonalInfoScreen.this,
+                        "Save fail:  " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void loadPersonalInfo() {
