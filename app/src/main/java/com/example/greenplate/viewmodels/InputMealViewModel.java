@@ -1,12 +1,35 @@
 package com.example.greenplate.viewmodels;
 
+import com.example.greenplate.model.FirebaseDB;
+
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class InputMealViewModel extends ViewModel {
+    private FirebaseFirestore db;
+    private DocumentReference userRef;
     private FirebaseAuth mAuth;
 
-    public InputMealViewModel() { mAuth = FirebaseAuth.getInstance();}
+    public InputMealViewModel() {
+        db = FirebaseDB.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String email = currentUser.getEmail();
+        userRef = db.collection("users").document(email);
+    }
 
     public void createMeal(String mealName, String calories, AuthCallback callback) {
         if (mealName.isEmpty() || calories.isEmpty()) {
@@ -25,26 +48,35 @@ public class InputMealViewModel extends ViewModel {
             callback.onFailure("Calories cannot be negative");
             return;
         }
-        //*******************BENJI WILL UNCOMMENT WHEN HE IMPLEMENTS FIREBASE**********
-        /**try {
+        try {
             // Attempt to parse the calories string to an integer
             int caloriesInt = Integer.parseInt(calories);
-            mAuth.createMealWithMealNameAndCalories(mealName, caloriesInt)
-                    .addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    //Meal added successfully
-                    callback.OnSuccess();
-                } else {
-                    //Meal add failed
-                    callback.onFailure(task.getException().getMessage());
-                }
-            })
+            Map<String, Object> meal = new HashMap<>();
+            meal.put("name", mealName);
+            meal.put("calories", caloriesInt);
+
+            userRef.collection("meals").document(mealName)
+                    .set(meal)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void v) {
+                            callback.onSuccess();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            callback.onFailure("Failed to add meal: " + e.getMessage()); // Notify failure
+                        }
+                    });
+
+
 
         } catch (NumberFormatException e) {
             // Parse Fails
             callback.onFailure("Calories must be a valid number");
             return;
-        }**/
+        }
     }
 
     public interface AuthCallback {
