@@ -40,12 +40,12 @@ public class InputMealViewModel extends ViewModel {
 
         if (calories.contains(" ")) {
             //calories will not parse to an int
-            callback.onFailure("Calories cannot contain whitespace.");
+            callback.onFailure("Calories cannot contain whitespace. Please try again.");
             return;
         }
         if (calories.contains("-")) {
             //calories cannot be negative
-            callback.onFailure("Calories cannot be negative.");
+            callback.onFailure("Calories cannot be negative. Please try again.");
             return;
         }
         try {
@@ -66,7 +66,7 @@ public class InputMealViewModel extends ViewModel {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            callback.onFailure("Failed to add meal: " + e.getMessage()); // Notify failure
+                            callback.onFailure("Failed to Add meal: " + e.getMessage()); // Notify failure
                         }
                     });
 
