@@ -41,7 +41,7 @@
         android:layout_width="136dp"
         android:layout_height="41dp"
         android:layout_below="@id/textViewMealName"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="0dp"
         android:text="# of Calories"
         android:textSize="20sp" />
 
@@ -50,6 +50,8 @@
         android:layout_width="248dp"
         android:layout_height="41dp"
         android:layout_below="@id/textViewInputMeal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="-4dp"
         android:layout_toRightOf="@id/textViewMealName"
         android:textSize="20sp"
         tools:textSize="20sp" />
@@ -59,6 +61,8 @@
         android:layout_width="248dp"
         android:layout_height="41dp"
         android:layout_below="@id/editTextMealName"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="2dp"
         android:layout_toRightOf="@id/textViewMealName"
         android:textSize="20sp"
         tools:textSize="20sp" />
@@ -69,6 +73,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewCalories"
         android:layout_alignParentRight="true"
-        android:text="Add"/>
+        android:layout_marginTop="21dp"
+        android:layout_marginRight="29dp"
+        android:text="Add" />
 
 </RelativeLayout>
