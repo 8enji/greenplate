@@ -9,14 +9,18 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.greenplate.R;
 import com.example.greenplate.viewmodels.InputMealViewModel;
+import com.example.greenplate.viewmodels.PersonalInfoViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.Map;
 
 public class InputMeal extends AppCompatActivity {
     private InputMealViewModel viewModel;
@@ -24,6 +28,9 @@ public class InputMeal extends AppCompatActivity {
     private Button buttonAdd;
     private EditText editTextMealName;
     private EditText editTextCalories;
+    private TextView textViewPersonalInfo;
+    private TextView textViewCalorieGoal;
+    private TextView textViewCurrentCalorieIntake;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +42,15 @@ public class InputMeal extends AppCompatActivity {
         editTextMealName = findViewById(R.id.editTextMealName);
         editTextCalories = findViewById(R.id.editTextCalories);
         buttonAdd = findViewById(R.id.buttonAdd);
+        textViewPersonalInfo = findViewById(R.id.textViewPersonalInfo);
+        textViewCalorieGoal = findViewById(R.id.textViewCalorieGoal);
+        textViewCurrentCalorieIntake = findViewById(R.id.textViewCurrentCalorieIntake);
+        loadPersonalInfo();
+
 
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomNavigation);
+
+
 
         buttonAdd.setOnClickListener(v -> {
             String mealName = editTextMealName.getText().toString();
@@ -83,4 +97,37 @@ public class InputMeal extends AppCompatActivity {
             }
         });
     }
+
+    private void loadPersonalInfo() {
+        viewModel.loadPersonalInfo(new InputMealViewModel.LoadPersonalInfoCallback() {
+            @Override
+            public void onSuccess(Map<String, Object> personalInfo) {
+                // Handle successful loading of personal information
+                // Update UI or perform any other actions
+                String height = personalInfo.get("height").toString();
+                String weight = personalInfo.get("weight").toString();
+                String gender = personalInfo.get("gender").toString();
+                textViewPersonalInfo.setText(String.format("Height: %s\" Weight: %slbs Gender: %s", height, weight, gender));
+                int calorieGoal;
+                if (gender.equalsIgnoreCase("Male")) {
+                    //activity level constant 1.5 (middle)
+                    //BMR calculated with Mifflin-St Jeor Equation, 1.5 * BMR
+                    double BMR = (10* Integer.parseInt(weight)) + (6.25 * Integer.parseInt(height)) - (5 * 20) + 5;  //uses age 20
+                    calorieGoal = (int)(1.5 * BMR);
+                } else {
+                    double BMR = (10* Integer.parseInt(weight)) + (6.25 * Integer.parseInt(height)) - (5 * 20) - 161;  //uses age 20
+                    calorieGoal = (int)(1.5 * BMR);
+                }
+                textViewCalorieGoal.setText(String.format("Calorie Goal: %d", calorieGoal));
+
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(InputMeal.this,
+                        "Load fail:  " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

@@ -71,4 +71,31 @@
         android:layout_alignParentRight="true"
         android:text="Add"/>
 
+    <TextView
+        android:id="@+id/textViewPersonalInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonAdd"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:text="Height: X Weight: Xlbs Gender: X"/>
+
+    <TextView
+        android:id="@+id/textViewCalorieGoal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewPersonalInfo"
+        android:layout_alignParentLeft="true"
+        android:textSize="20sp"
+        android:text="Calorie Goal: 0"/>
+
+    <TextView
+        android:id="@+id/textViewCurrentCalorieIntake"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewPersonalInfo"
+        android:layout_alignParentRight="true"
+        android:textSize="20sp"
+        android:text="Current Intake: 0"/>
+
 </RelativeLayout>

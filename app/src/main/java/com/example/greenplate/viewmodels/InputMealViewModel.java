@@ -79,6 +79,29 @@ public class InputMealViewModel extends ViewModel {
         }
     }
 
+    public void loadPersonalInfo(InputMealViewModel.LoadPersonalInfoCallback callback) {
+        userRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Map<String, Object> personalInfo = document.getData();
+                    if (personalInfo.get("height") != null) {
+                        callback.onSuccess(personalInfo);
+                    }
+                } else {
+                    callback.onFailure("Document does not exist");
+                }
+            } else {
+                callback.onFailure("Failed to load personal info: " + task.getException().getMessage());
+            }
+        });
+    }
+
+    public interface LoadPersonalInfoCallback {
+        void onSuccess(Map<String, Object> personalInfo);
+        void onFailure(String error);
+    }
+
     public interface AuthCallback {
         void onSuccess();
         void onFailure(String error);
