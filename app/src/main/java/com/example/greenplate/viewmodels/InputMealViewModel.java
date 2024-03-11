@@ -9,10 +9,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -77,6 +78,90 @@ public class InputMealViewModel extends ViewModel {
             callback.onFailure("Calories must be a valid number");
             return;
         }
+    }
+
+    public void loadPersonalInfo(InputMealViewModel.LoadPersonalInfoCallback callback) {
+        userRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Map<String, Object> personalInfo = document.getData();
+                    if (personalInfo.get("height") != null) {
+                        callback.onSuccess(personalInfo);
+                    }
+                } else {
+                    callback.onFailure("Document does not exist");
+                }
+            } else {
+                callback.onFailure("Failed to load personal info: " + task.getException().getMessage());
+            }
+        });
+    }
+
+    public void calculateCalorieGoal(InputMealViewModel.CalculateCalorieGoalCallback callback) {
+        userRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Map<String, Object> personalInfo = document.getData();
+                    if (personalInfo.get("height") != null) {
+                        String height = personalInfo.get("height").toString();
+                        String weight = personalInfo.get("weight").toString();
+                        String gender = personalInfo.get("gender").toString();
+                        int calorieGoal;
+                        if (gender.equalsIgnoreCase("Male")) {
+                            //activity level constant 1.5 (middle)
+                            //BMR calculated with Mifflin-St Jeor Equation, 1.5 * BMR
+                            double BMR = (10* Integer.parseInt(weight)) + (6.25 * Integer.parseInt(height)) - (5 * 20) + 5;  //uses age 20
+                            calorieGoal = (int)(1.5 * BMR);
+                        } else {
+                            double BMR = (10* Integer.parseInt(weight)) + (6.25 * Integer.parseInt(height)) - (5 * 20) - 161;  //uses age 20
+                            calorieGoal = (int)(1.5 * BMR);
+                        }
+                        callback.onSuccess(calorieGoal);
+                    }
+                } else {
+                    callback.onFailure("Document does not exist");
+                }
+            } else {
+                callback.onFailure("Failed to load personal info: " + task.getException().getMessage());
+            }
+        });
+    }
+
+    public void calculateTotalCalories(CalculateCalorieIntakeCallback callback) {
+        userRef.collection("meals").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                int totalCalories = 0;
+                for (DocumentSnapshot document : task.getResult()) {
+                    Map<String, Object> mealData = document.getData();
+                    // Traverses through each meal document
+                    if (mealData != null && mealData.containsKey("calories")) {
+                        int calories = Integer.parseInt(mealData.get("calories").toString());
+                        totalCalories += calories;
+                    }
+                }
+                callback.onSuccess(totalCalories);
+            } else {
+                callback.onFailure("Failed to calculate total calories: " + task.getException().getMessage());
+            }
+        });
+    }
+
+
+    public interface LoadPersonalInfoCallback {
+        void onSuccess(Map<String, Object> personalInfo);
+        void onFailure(String error);
+    }
+
+    public interface CalculateCalorieGoalCallback {
+        void onSuccess(int calorieGoal);
+        void onFailure(String error);
+    }
+
+    public interface CalculateCalorieIntakeCallback {
+        void onSuccess(int calorieIntake);
+        void onFailure(String error);
     }
 
     public interface AuthCallback {
