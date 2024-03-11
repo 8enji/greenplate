@@ -46,6 +46,7 @@ public class InputMeal extends AppCompatActivity {
         textViewCalorieGoal = findViewById(R.id.textViewCalorieGoal);
         textViewCurrentCalorieIntake = findViewById(R.id.textViewCurrentCalorieIntake);
         loadPersonalInfo();
+        calculateCalorieGoal();
 
 
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomNavigation);
@@ -98,6 +99,23 @@ public class InputMeal extends AppCompatActivity {
         });
     }
 
+    private void calculateCalorieGoal() {
+        viewModel.calculateCalorieGoal(new InputMealViewModel.CalculateCalorieGoalCallback() {
+            @Override
+            public void onSuccess(int calorieGoal) {
+                //Handle successful calculation of calorie goal
+                //update UI
+                textViewCalorieGoal.setText(String.format("Calorie Goal: %d", calorieGoal));
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(InputMeal.this,
+                        "Load fail:  " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void loadPersonalInfo() {
         viewModel.loadPersonalInfo(new InputMealViewModel.LoadPersonalInfoCallback() {
             @Override
@@ -108,18 +126,6 @@ public class InputMeal extends AppCompatActivity {
                 String weight = personalInfo.get("weight").toString();
                 String gender = personalInfo.get("gender").toString();
                 textViewPersonalInfo.setText(String.format("Height: %s\" Weight: %slbs Gender: %s", height, weight, gender));
-                int calorieGoal;
-                if (gender.equalsIgnoreCase("Male")) {
-                    //activity level constant 1.5 (middle)
-                    //BMR calculated with Mifflin-St Jeor Equation, 1.5 * BMR
-                    double BMR = (10* Integer.parseInt(weight)) + (6.25 * Integer.parseInt(height)) - (5 * 20) + 5;  //uses age 20
-                    calorieGoal = (int)(1.5 * BMR);
-                } else {
-                    double BMR = (10* Integer.parseInt(weight)) + (6.25 * Integer.parseInt(height)) - (5 * 20) - 161;  //uses age 20
-                    calorieGoal = (int)(1.5 * BMR);
-                }
-                textViewCalorieGoal.setText(String.format("Calorie Goal: %d", calorieGoal));
-
             }
 
             @Override
