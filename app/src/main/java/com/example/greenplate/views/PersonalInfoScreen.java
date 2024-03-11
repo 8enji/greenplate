@@ -30,7 +30,6 @@ public class PersonalInfoScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_info_screen);
 
-
         // Initialize the views
         editTextHeight = findViewById(R.id.editTextHeight);
         editTextWeight = findViewById(R.id.editTextWeight);
