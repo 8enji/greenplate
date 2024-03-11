@@ -87,7 +87,7 @@
         android:layout_below="@id/textViewPersonalInfo"
         android:layout_alignParentLeft="true"
         android:textSize="20sp"
-        android:text="Calorie Goal: 0"/>
+        android:text="Daily Calorie Goal: 0"/>
 
     <TextView
         android:id="@+id/textViewCurrentCalorieIntake"

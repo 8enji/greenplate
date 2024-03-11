@@ -129,6 +129,26 @@ public class InputMealViewModel extends ViewModel {
         });
     }
 
+    public void calculateTotalCalories(CalculateCalorieIntakeCallback callback) {
+        userRef.collection("meals").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                int totalCalories = 0;
+                for (DocumentSnapshot document : task.getResult()) {
+                    Map<String, Object> mealData = document.getData();
+                    // Traverses through each meal document
+                    if (mealData != null && mealData.containsKey("calories")) {
+                        int calories = Integer.parseInt(mealData.get("calories").toString());
+                        totalCalories += calories;
+                    }
+                }
+                callback.onSuccess(totalCalories);
+            } else {
+                callback.onFailure("Failed to calculate total calories: " + task.getException().getMessage());
+            }
+        });
+    }
+
+
     public interface LoadPersonalInfoCallback {
         void onSuccess(Map<String, Object> personalInfo);
         void onFailure(String error);
@@ -136,6 +156,11 @@ public class InputMealViewModel extends ViewModel {
 
     public interface CalculateCalorieGoalCallback {
         void onSuccess(int calorieGoal);
+        void onFailure(String error);
+    }
+
+    public interface CalculateCalorieIntakeCallback {
+        void onSuccess(int calorieIntake);
         void onFailure(String error);
     }
 

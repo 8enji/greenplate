@@ -47,6 +47,7 @@ public class InputMeal extends AppCompatActivity {
         textViewCurrentCalorieIntake = findViewById(R.id.textViewCurrentCalorieIntake);
         loadPersonalInfo();
         calculateCalorieGoal();
+        calculateCalorieIntake();
 
 
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomNavigation);
@@ -105,7 +106,24 @@ public class InputMeal extends AppCompatActivity {
             public void onSuccess(int calorieGoal) {
                 //Handle successful calculation of calorie goal
                 //update UI
-                textViewCalorieGoal.setText(String.format("Calorie Goal: %d", calorieGoal));
+                textViewCalorieGoal.setText(String.format("Daily Calorie Goal: %d", calorieGoal));
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(InputMeal.this,
+                        "Load fail:  " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void calculateCalorieIntake() {
+        viewModel.calculateTotalCalories(new InputMealViewModel.CalculateCalorieIntakeCallback() {
+            @Override
+            public void onSuccess(int calorieIntake) {
+                //Handle successful calculation of calorie goal
+                //update UI
+                textViewCurrentCalorieIntake.setText(String.format("Current Intake: %d", calorieIntake));
             }
 
             @Override
