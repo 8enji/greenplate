@@ -59,7 +59,7 @@ public class AccountCreateViewModel extends ViewModel {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        callback.onFailure("Failed to add meal: " + e.getMessage()); // Notify failure
+                        callback.onFailure("Failed to add account to db: " + e.getMessage()); // Notify failure
                     }
                 });
     }
