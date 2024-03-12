@@ -32,6 +32,8 @@ public class InputMeal extends AppCompatActivity {
     private InputMealViewModel viewModel;
     private BottomNavigationView bottomNavigation;
     private Button buttonAdd;
+
+    private Button viewCaloriesDone;
     private EditText editTextMealName;
     private EditText editTextCalories;
     private TextView textViewPersonalInfo;
@@ -42,12 +44,19 @@ public class InputMeal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_meal);
+        AnyChartView anyChartView = findViewById(R.id.any_chart_view);
+        Pie pie = AnyChart.pie();
 
+        List<DataEntry> data = new ArrayList<>();
+        data.add(new ValueDataEntry("Calories Eaten", 2000));
+        pie.data(data);
+        anyChartView.setChart(pie);
         viewModel = new ViewModelProvider(this).get(InputMealViewModel.class);
 
         editTextMealName = findViewById(R.id.editTextMealName);
         editTextCalories = findViewById(R.id.editTextCalories);
         buttonAdd = findViewById(R.id.buttonAdd);
+        viewCaloriesDone = findViewById((R.id.viewCaloriesDone));
         textViewPersonalInfo = findViewById(R.id.textViewPersonalInfo);
         textViewCalorieGoal = findViewById(R.id.textViewCalorieGoal);
         textViewCurrentCalorieIntake = findViewById(R.id.textViewCurrentCalorieIntake);
@@ -55,10 +64,7 @@ public class InputMeal extends AppCompatActivity {
         calculateCalorieGoal();
         calculateCalorieIntake();
 
-
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomNavigation);
-
-
 
         buttonAdd.setOnClickListener(v -> {
             String mealName = editTextMealName.getText().toString();
