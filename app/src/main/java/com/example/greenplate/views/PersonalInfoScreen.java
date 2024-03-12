@@ -22,15 +22,15 @@ import com.google.android.material.navigation.NavigationBarView;
 import java.util.Map;
 
 public class PersonalInfoScreen extends AppCompatActivity {
+
     private BottomNavigationView bottomNavigation;
     private PersonalInfoViewModel viewModel;
-
     private EditText editTextHeight;
     private EditText editTextWeight;
-
     private EditText editTextGender;
     private Button buttonSave;
 
+    // Initialization of Personal Info Screen and UI Actions
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +53,7 @@ public class PersonalInfoScreen extends AppCompatActivity {
             }
         });
 
-
+        // Bottom Navigation
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomNavigation);
         bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -79,12 +79,14 @@ public class PersonalInfoScreen extends AppCompatActivity {
         });
     }
 
+    // Saving of User Personal Info
     private void savePersonalInfo() {
         String height = editTextHeight.getText().toString();
         String weight = editTextWeight.getText().toString();
         String gender = editTextGender.getText().toString();
 
         viewModel.savePersonalInfo(height, weight, gender, new PersonalInfoViewModel.AuthCallback() {
+            // Handle successful saving of User Personal Info
             @Override
             public void onSuccess() {
                 Toast.makeText(PersonalInfoScreen.this,
@@ -92,6 +94,7 @@ public class PersonalInfoScreen extends AppCompatActivity {
                 finish();
             }
 
+            // Handle failure to save User Personal Info
             @Override
             public void onFailure(String error) {
                 Toast.makeText(PersonalInfoScreen.this,
@@ -100,12 +103,12 @@ public class PersonalInfoScreen extends AppCompatActivity {
         });
     }
 
+    // Loading of User Personal Info
     private void loadPersonalInfo() {
         viewModel.loadPersonalInfo(new PersonalInfoViewModel.LoadPersonalInfoCallback() {
+            // Handle successful loading of User Personal Info and Update UI
             @Override
             public void onSuccess(Map<String, Object> personalInfo) {
-                // Handle successful loading of personal information
-                // Update UI or perform any other actions
                 editTextHeight.setText(personalInfo.get("height").toString());
                 editTextWeight.setText(personalInfo.get("weight").toString());
                 editTextGender.setText(personalInfo.get("gender").toString());
@@ -113,6 +116,7 @@ public class PersonalInfoScreen extends AppCompatActivity {
                         "Information saved", Toast.LENGTH_SHORT).show();
             }
 
+            // Handle failure to load User Personal Info and Update UI
             @Override
             public void onFailure(String error) {
                 Toast.makeText(PersonalInfoScreen.this,
@@ -120,5 +124,4 @@ public class PersonalInfoScreen extends AppCompatActivity {
             }
         });
     }
-
 }
