@@ -19,7 +19,13 @@ import com.example.greenplate.viewmodels.InputMealViewModel;
 import com.example.greenplate.viewmodels.PersonalInfoViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
+import com.anychart.AnyChart;
+import com.anychart.AnyChartView;
+import com.anychart.chart.common.dataentry.DataEntry;
+import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.charts.Pie;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class InputMeal extends AppCompatActivity {
