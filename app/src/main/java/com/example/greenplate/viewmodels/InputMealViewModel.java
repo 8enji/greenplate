@@ -141,7 +141,7 @@ public class InputMealViewModel extends ViewModel {
                         totalCalories += calories;
                     }
                 }
-                callback.onSuccess(totalCalories);
+                callback.onSuccess(totalCalovries);
             } else {
                 callback.onFailure("Failed to calculate total calories: " + task.getException().getMessage());
             }
