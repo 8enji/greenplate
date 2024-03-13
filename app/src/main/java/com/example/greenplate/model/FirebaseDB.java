@@ -8,8 +8,6 @@ public class FirebaseDB {
     private FirebaseDB() { }
 
     public static FirebaseFirestore getInstance() {
-        // so uh firebase uses singleton out of the box, not rly sure what the point
-        // of this is
         if (db == null) {
             db = FirebaseFirestore.getInstance();
         }
