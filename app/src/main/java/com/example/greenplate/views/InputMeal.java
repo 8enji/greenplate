@@ -68,7 +68,8 @@ public class InputMeal extends AppCompatActivity {
         AnyChartView anyChartView = findViewById(R.id.any_chart_view);
         Pie pie = AnyChart.pie();
         List<DataEntry> data = new ArrayList<>();
-        data.add(new ValueDataEntry("Calories Goal", 3));
+        data.add(new ValueDataEntry("Calories Goal", 2500));
+        data.add(new ValueDataEntry("Calories Remaining", 12000));
         pie.data(data);
         pie.legend().title().enabled(true);
         pie.legend().title()
@@ -139,23 +140,6 @@ public class InputMeal extends AppCompatActivity {
             public void onSuccess(int calorieGoal) {
                 //Handle successful calculation of calorie goal
                 //update UI
-                AnyChartView anyChartView = findViewById(R.id.any_chart_view);
-                Pie pie = AnyChart.pie();
-                List<DataEntry> data = new ArrayList<>();
-                data.add(new ValueDataEntry("Calories Eaten", calorieGoal));
-                pie.data(data);
-                pie.legend().title().enabled(true);
-                pie.legend().title()
-                        .text("Calories Eaten Today")
-                        .padding(0d, 0d, 5d, 0d);
-                pie.legend()
-                        .position("center-bottom")
-                        .itemsLayout(LegendLayout.HORIZONTAL)
-                        .align(Align.CENTER);
-                viewCaloriesDone.setOnClickListener(v -> {
-                    anyChartView.setChart(pie);
-                });
-                textViewCalorieGoal.setText(String.format("Daily Calorie Goal: %d", calorieGoal));
             }
 
             @Override
@@ -172,22 +156,6 @@ public class InputMeal extends AppCompatActivity {
             public void onSuccess(int calorieIntake) {
                 //Handle successful calculation of calorie goal
                 //update UI
-                AnyChartView anyChartView = findViewById(R.id.any_chart_view);
-                Pie pie = AnyChart.pie();
-                List<DataEntry> data = new ArrayList<>();
-                data.add(new ValueDataEntry("Calories Eaten", calorieIntake));
-                pie.data(data);
-                pie.legend().title().enabled(true);
-                pie.legend().title()
-                        .text("Calories Eaten Today")
-                        .padding(0d, 0d, 5d, 0d);
-                pie.legend()
-                        .position("center-bottom")
-                        .itemsLayout(LegendLayout.HORIZONTAL)
-                        .align(Align.CENTER);
-                viewCaloriesDone.setOnClickListener(v -> {
-                    anyChartView.setChart(pie);
-                });
                 textViewCurrentCalorieIntake.setText(String.format("Current Intake: %d", calorieIntake));
             }
 
