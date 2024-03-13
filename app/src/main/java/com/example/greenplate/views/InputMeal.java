@@ -4,20 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.util.Log;
 import android.widget.Toast;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.greenplate.R;
 import com.example.greenplate.viewmodels.InputMealViewModel;
-import com.example.greenplate.viewmodels.PersonalInfoViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.anychart.AnyChart;
@@ -29,7 +27,6 @@ import com.anychart.enums.LegendLayout;
 import com.anychart.enums.Align;
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.Number;
 import java.util.Map;
 
 public class InputMeal extends AppCompatActivity {
@@ -69,7 +66,7 @@ public class InputMeal extends AppCompatActivity {
         Pie pie = AnyChart.pie();
         List<DataEntry> data = new ArrayList<>();
         data.add(new ValueDataEntry("Calories Goal", 2500));
-        data.add(new ValueDataEntry("Calories Remaining", 12000));
+        data.add(new ValueDataEntry("Calories Remaining", 1200));
         pie.data(data);
         pie.legend().title().enabled(true);
         pie.legend().title()
@@ -156,7 +153,8 @@ public class InputMeal extends AppCompatActivity {
             public void onSuccess(int calorieIntake) {
                 //Handle successful calculation of calorie goal
                 //update UI
-                textViewCurrentCalorieIntake.setText(String.format("Current Intake: %d", calorieIntake));
+                textViewCurrentCalorieIntake.setText(
+                        String.format("Current Intake: %d", calorieIntake));
             }
 
             @Override
@@ -176,7 +174,8 @@ public class InputMeal extends AppCompatActivity {
                 String height = personalInfo.get("height").toString();
                 String weight = personalInfo.get("weight").toString();
                 String gender = personalInfo.get("gender").toString();
-                textViewPersonalInfo.setText(String.format("Height: %s\" Weight: %slbs Gender: %s", height, weight, gender));
+                textViewPersonalInfo.setText(String.format("Height: %s\" Weight: %slbs Gender: %s",
+                        height, weight, gender));
             }
 
             @Override

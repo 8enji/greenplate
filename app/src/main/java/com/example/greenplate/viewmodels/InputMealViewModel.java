@@ -2,8 +2,6 @@ package com.example.greenplate.viewmodels;
 
 import com.example.greenplate.model.FirebaseDB;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
@@ -67,7 +65,8 @@ public class InputMealViewModel extends ViewModel {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            callback.onFailure("Failed to add meal: " + e.getMessage()); // Notify failure
+                            callback.onFailure("Failed to add meal: " + e.getMessage());
+                            // Notify failure
                         }
                     });
 
@@ -93,7 +92,8 @@ public class InputMealViewModel extends ViewModel {
                     callback.onFailure("Document does not exist");
                 }
             } else {
-                callback.onFailure("Failed to load personal info: " + task.getException().getMessage());
+                callback.onFailure("Failed to load personal info: "
+                        + task.getException().getMessage());
             }
         });
     }
@@ -112,11 +112,16 @@ public class InputMealViewModel extends ViewModel {
                         if (gender.equalsIgnoreCase("Male")) {
                             //activity level constant 1.5 (middle)
                             //BMR calculated with Mifflin-St Jeor Equation, 1.5 * BMR
-                            double BMR = (10* Integer.parseInt(weight)) + (6.25 * Integer.parseInt(height)) - (5 * 20) + 5;  //uses age 20
-                            calorieGoal = (int)(1.5 * BMR);
+                            double bmr = (10 * Integer.parseInt(weight))
+                                    + (6.25 * Integer.parseInt(height))
+                                    - (5 * 20) + 5;
+                            //uses age 20
+                            calorieGoal = (int) (1.5 * bmr);
                         } else {
-                            double BMR = (10* Integer.parseInt(weight)) + (6.25 * Integer.parseInt(height)) - (5 * 20) - 161;  //uses age 20
-                            calorieGoal = (int)(1.5 * BMR);
+                            double bmr = (10 * Integer.parseInt(weight))
+                                    + (6.25 * Integer.parseInt(height))
+                                    - (5 * 20) - 161;  //uses age 20
+                            calorieGoal = (int) (1.5 * bmr);
                         }
                         callback.onSuccess(calorieGoal);
                     }
@@ -124,7 +129,8 @@ public class InputMealViewModel extends ViewModel {
                     callback.onFailure("Document does not exist");
                 }
             } else {
-                callback.onFailure("Failed to load personal info: " + task.getException().getMessage());
+                callback.onFailure("Failed to load personal info: "
+                        + task.getException().getMessage());
             }
         });
     }
@@ -143,7 +149,8 @@ public class InputMealViewModel extends ViewModel {
                 }
                 callback.onSuccess(totalCalories);
             } else {
-                callback.onFailure("Failed to calculate total calories: " + task.getException().getMessage());
+                callback.onFailure("Failed to calculate total calories: "
+                        + task.getException().getMessage());
             }
         });
     }
