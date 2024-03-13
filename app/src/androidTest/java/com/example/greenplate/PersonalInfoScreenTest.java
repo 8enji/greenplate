@@ -23,6 +23,7 @@ import com.example.greenplate.views.PersonalInfoScreen;
 public class PersonalInfoScreenTest {
 
     /**
+     * JUNIT TESTS
      * NOTE: YOU CAN'T RUN BOTH TESTS AT THE SAME TIME, AS YOU NEED TO MAKE DIFFERENT ACCOUNTS.
      */
     @Test
