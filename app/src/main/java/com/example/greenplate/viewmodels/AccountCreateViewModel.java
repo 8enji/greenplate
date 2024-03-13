@@ -1,6 +1,5 @@
 package com.example.greenplate.viewmodels;
 
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
@@ -9,7 +8,6 @@ import com.example.greenplate.model.FirebaseDB;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -59,7 +57,8 @@ public class AccountCreateViewModel extends ViewModel {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        callback.onFailure("Failed to add account to db: " + e.getMessage()); // Notify failure
+                        callback.onFailure("Failed to add account to db: " + e.getMessage());
+                        // Notify failure
                     }
                 });
     }

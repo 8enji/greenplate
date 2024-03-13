@@ -1,8 +1,6 @@
 package com.example.greenplate.viewmodels;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.example.greenplate.model.FirebaseDB;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,7 +28,8 @@ public class PersonalInfoViewModel extends ViewModel {
         userRef = db.collection("users").document(email);
     }
 
-    public void savePersonalInfo(String height, String weight, String gender, AuthCallback callback) {
+    public void savePersonalInfo(String height, String weight, String gender,
+                                 AuthCallback callback) {
         if (height.isEmpty() || weight.isEmpty() || gender.isEmpty()) {
             //null checking
             callback.onFailure("All fields must be non-empty");
@@ -55,7 +54,8 @@ public class PersonalInfoViewModel extends ViewModel {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            callback.onFailure("Failed to save personal info: " + e.getMessage()); // Notify failure
+                            callback.onFailure("Failed to save personal info: "
+                                    + e.getMessage()); // Notify failure
                         }
                     });
 
@@ -81,7 +81,8 @@ public class PersonalInfoViewModel extends ViewModel {
                     callback.onFailure("Document does not exist");
                 }
             } else {
-                callback.onFailure("Failed to load personal info: " + task.getException().getMessage());
+                callback.onFailure("Failed to load personal info: "
+                        + task.getException().getMessage());
             }
         });
     }
