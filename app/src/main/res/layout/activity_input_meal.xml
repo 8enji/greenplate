@@ -109,7 +109,9 @@
         android:id="@+id/any_chart_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/textViewCurrentCalorieIntake"
+        android:layout_above="@id/bottomNavigation"
+        android:layout_below="@id/textViewCalorieGoal"
+        android:layout_marginTop="-1dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

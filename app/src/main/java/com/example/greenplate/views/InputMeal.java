@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -24,8 +25,11 @@ import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Pie;
+import com.anychart.enums.LegendLayout;
+import com.anychart.enums.Align;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.Number;
 import java.util.Map;
 
 public class InputMeal extends AppCompatActivity {
@@ -40,17 +44,15 @@ public class InputMeal extends AppCompatActivity {
     private TextView textViewCalorieGoal;
     private TextView textViewCurrentCalorieIntake;
 
+    private int chartCalories;
+    private int caloriesEaten;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_meal);
         AnyChartView anyChartView = findViewById(R.id.any_chart_view);
         Pie pie = AnyChart.pie();
-
-        List<DataEntry> data = new ArrayList<>();
-        data.add(new ValueDataEntry("Calories Eaten", 2000));
-        pie.data(data);
-        anyChartView.setChart(pie);
         viewModel = new ViewModelProvider(this).get(InputMealViewModel.class);
 
         editTextMealName = findViewById(R.id.editTextMealName);
@@ -71,6 +73,26 @@ public class InputMeal extends AppCompatActivity {
             String caloriesString = editTextCalories.getText().toString();
             createMeal(mealName, caloriesString);
         });
+
+        List<DataEntry> data = new ArrayList<>();
+        Log.d("InputMeal", "chartCalories: " + chartCalories);
+        Log.d("InputMeal", "caloriesEaten: " + caloriesEaten);
+        data.add(new ValueDataEntry("Calories Eaten", caloriesEaten));
+        data.add(new ValueDataEntry("Calories Remaining", chartCalories));
+        pie.data(data);
+        pie.legend().title().enabled(true);
+        pie.legend().title()
+                .text("Calories Eaten Today")
+                .padding(0d, 0d, 5d, 0d);
+        pie.legend()
+                .position("center-bottom")
+                .itemsLayout(LegendLayout.HORIZONTAL)
+                .align(Align.CENTER);
+
+        viewCaloriesDone.setOnClickListener(v -> {
+            anyChartView.setChart(pie);
+        });
+
         bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -118,6 +140,7 @@ public class InputMeal extends AppCompatActivity {
             public void onSuccess(int calorieGoal) {
                 //Handle successful calculation of calorie goal
                 //update UI
+                chartCalories = calorieGoal;
                 textViewCalorieGoal.setText(String.format("Daily Calorie Goal: %d", calorieGoal));
             }
 
@@ -135,6 +158,7 @@ public class InputMeal extends AppCompatActivity {
             public void onSuccess(int calorieIntake) {
                 //Handle successful calculation of calorie goal
                 //update UI
+                caloriesEaten = calorieIntake;
                 textViewCurrentCalorieIntake.setText(String.format("Current Intake: %d", calorieIntake));
             }
 
