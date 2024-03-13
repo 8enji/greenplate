@@ -78,15 +78,6 @@
         android:layout_below="@id/textViewCalories"
         android:text="Calorie View"/>
 
-    <Button
-        android:id="@+id/calsOverTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewCalories"
-        andorid:l="@id/viewCaloriesDone"
-        android:layout_marginTop="0dp"
-        android:text="Over Time" />
-
     <TextView
         android:id="@+id/textViewPersonalInfo"
         android:layout_width="wrap_content"
