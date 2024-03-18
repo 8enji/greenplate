@@ -33,18 +33,15 @@ public class InputMeal extends AppCompatActivity {
     private InputMealViewModel viewModel;
     private BottomNavigationView bottomNavigation;
     private Button buttonAdd;
-
     private Button viewCaloriesDone;
-    private Button visualdata2;
     private EditText editTextMealName;
     private EditText editTextCalories;
     private TextView textViewPersonalInfo;
     private TextView textViewCalorieGoal;
     private TextView textViewCurrentCalorieIntake;
+    private AnyChartView anyChartView;
 
-    private int chartCalories;
-    private int caloriesEaten;
-
+    private Pie pie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,37 +55,23 @@ public class InputMeal extends AppCompatActivity {
         textViewPersonalInfo = findViewById(R.id.textViewPersonalInfo);
         textViewCalorieGoal = findViewById(R.id.textViewCalorieGoal);
         textViewCurrentCalorieIntake = findViewById(R.id.textViewCurrentCalorieIntake);
+        bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomNavigation);
+        anyChartView = findViewById(R.id.any_chart_view);
+
         loadPersonalInfo();
         calculateCalorieIntake();
         calculateCalorieGoal();
 
-        AnyChartView anyChartView = findViewById(R.id.any_chart_view);
-        Pie pie = AnyChart.pie();
-        List<DataEntry> data = new ArrayList<>();
-        data.add(new ValueDataEntry("Calories Goal", 2500));
-        data.add(new ValueDataEntry("Calories Remaining", 1200));
-        pie.data(data);
-        pie.legend().title().enabled(true);
-        pie.legend().title()
-                .text("Calories Eaten Today")
-                .padding(0d, 0d, 5d, 0d);
-        pie.legend()
-                .position("center-bottom")
-                .itemsLayout(LegendLayout.HORIZONTAL)
-                .align(Align.CENTER);
         viewCaloriesDone.setOnClickListener(v -> {
+            loadPieChart();
             anyChartView.setChart(pie);
         });
-
-
-        bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomNavigation);
 
         buttonAdd.setOnClickListener(v -> {
             String mealName = editTextMealName.getText().toString();
             String caloriesString = editTextCalories.getText().toString();
             createMeal(mealName, caloriesString);
         });
-
 
         bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -137,6 +120,7 @@ public class InputMeal extends AppCompatActivity {
             public void onSuccess(int calorieGoal) {
                 //Handle successful calculation of calorie goal
                 //update UI
+                textViewCalorieGoal.setText(String.format("Daily Calorie Goal: %d", calorieGoal));
             }
 
             @Override
@@ -184,6 +168,27 @@ public class InputMeal extends AppCompatActivity {
                         "Load fail:  " + error, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void loadPieChart() {
+        pie = AnyChart.pie();
+        int calorieGoal = viewModel.getCalorieGoal();
+        int totalCalories = viewModel.getTotalCalories();
+        int remainingCalories = calorieGoal - totalCalories;
+        remainingCalories = Math.max(remainingCalories, 0);
+        System.out.println(totalCalories);
+        List<DataEntry> data = new ArrayList<>();
+        data.add(new ValueDataEntry("Calories Eaten", totalCalories));
+        data.add(new ValueDataEntry("Calories Remaining", remainingCalories));
+        pie.data(data);
+        pie.legend().title().enabled(true);
+        pie.legend().title()
+                .text("Calories Eaten Today")
+                .padding(0d, 0d, 5d, 0d);
+        pie.legend()
+                .position("center-bottom")
+                .itemsLayout(LegendLayout.HORIZONTAL)
+                .align(Align.CENTER);
     }
 
 }

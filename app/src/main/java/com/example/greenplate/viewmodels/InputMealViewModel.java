@@ -21,6 +21,8 @@ public class InputMealViewModel extends ViewModel {
     private DocumentReference userRef;
     private FirebaseAuth mAuth;
 
+    private int calorieGoal;
+    private int totalCalories;
     public InputMealViewModel() {
         db = FirebaseDB.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -108,7 +110,6 @@ public class InputMealViewModel extends ViewModel {
                         String height = personalInfo.get("height").toString();
                         String weight = personalInfo.get("weight").toString();
                         String gender = personalInfo.get("gender").toString();
-                        int calorieGoal;
                         if (gender.equalsIgnoreCase("Male")) {
                             //activity level constant 1.5 (middle)
                             //BMR calculated with Mifflin-St Jeor Equation, 1.5 * BMR
@@ -138,7 +139,7 @@ public class InputMealViewModel extends ViewModel {
     public void calculateTotalCalories(CalculateCalorieIntakeCallback callback) {
         userRef.collection("meals").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                int totalCalories = 0;
+                totalCalories = 0;
                 for (DocumentSnapshot document : task.getResult()) {
                     Map<String, Object> mealData = document.getData();
                     // Traverses through each meal document
@@ -155,6 +156,13 @@ public class InputMealViewModel extends ViewModel {
         });
     }
 
+    public int getCalorieGoal() {
+        return  calorieGoal;
+    }
+
+    public int getTotalCalories() {
+        return totalCalories;
+    }
 
     public interface LoadPersonalInfoCallback {
         void onSuccess(Map<String, Object> personalInfo);
