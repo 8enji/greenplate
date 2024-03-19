@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Toast;
 import android.os.Bundle;
@@ -17,8 +18,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.anychart.APIlib;
 import com.anychart.charts.Cartesian;
-import com.anychart.enums.TooltipPositionMode;
-import com.anychart.graphics.vector.Stroke;
 import com.example.greenplate.R;
 import com.example.greenplate.viewmodels.InputMealViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,8 +30,6 @@ import com.anychart.charts.Pie;
 import com.anychart.data.Set;
 import com.anychart.core.cartesian.series.Line;
 import com.anychart.data.Mapping;
-import com.anychart.enums.Anchor;
-import com.anychart.enums.MarkerType;
 import com.anychart.enums.LegendLayout;
 import com.anychart.enums.Align;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -41,6 +38,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class InputMeal extends AppCompatActivity {
     private InputMealViewModel viewModel;
@@ -242,18 +241,35 @@ public class InputMeal extends AppCompatActivity {
         // Everyone starts at 0 calories
         seriesData.add(new ValueDataEntry("00:00", 0));
 
-        int curCalories = 0;
+        // Initialize a list to store tuples of time and total calories
+        List<Pair<String, Integer>> timeCaloriesList = new ArrayList<>();
+
+        // Iterate through each meal document
         for (DocumentSnapshot document : meals) {
             Map<String, Object> mealData = document.getData();
-            // Traverses through each meal document
-            if (mealData != null && mealData.containsKey("calories")) {
+            if (mealData != null && mealData.containsKey("calories") && mealData.containsKey("time")) {
                 String time = mealData.get("time").toString();
                 int calories = Integer.parseInt(mealData.get("calories").toString());
-                curCalories += calories;
-                seriesData.add(new ValueDataEntry(time, curCalories));
+
+                // Add the tuple (time, calories) to the list
+                timeCaloriesList.add(new Pair<>(time, calories));
             }
         }
-        // Add more data points as needed...
+
+        // Sort the list of tuples based on the time
+        Collections.sort(timeCaloriesList, new Comparator<Pair<String, Integer>>() {
+            @Override
+            public int compare(Pair<String, Integer> pair1, Pair<String, Integer> pair2) {
+                return pair1.first.compareTo(pair2.first);
+            }
+        });
+
+        // Iterate through the sorted list and populate the seriesData list
+        int totalCalories = 0;
+        for (Pair<String, Integer> pair : timeCaloriesList) {
+            totalCalories += pair.second; // Add calories to the total
+            seriesData.add(new ValueDataEntry(pair.first, totalCalories));
+        }
 
         // Create a set of data
         Set set = Set.instantiate();
