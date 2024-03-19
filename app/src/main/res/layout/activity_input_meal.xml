@@ -76,7 +76,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewCalories"
-        android:text="Calorie View"/>
+        android:layout_marginStart="5dp"
+        android:text="Daily Progress"/>
+
+    <Button
+        android:id="@+id/buttonLineChart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@id/viewCaloriesDone"
+        android:layout_alignBaseline="@id/viewCaloriesDone"
+        android:text="My Eating Habits" />
 
     <TextView
         android:id="@+id/textViewPersonalInfo"
@@ -106,14 +116,24 @@
         android:text="Current Intake: 0"/>
 
     <com.anychart.AnyChartView
+        android:id="@+id/line_chart_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNavigation"
+        android:layout_below="@id/textViewCalorieGoal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.anychart.AnyChartView
         android:id="@+id/any_chart_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottomNavigation"
         android:layout_below="@id/textViewCalorieGoal"
-        android:layout_marginTop="-1dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </RelativeLayout>

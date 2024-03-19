@@ -12,15 +12,21 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 public class InputMealViewModel extends ViewModel {
     private FirebaseFirestore db;
     private DocumentReference userRef;
     private FirebaseAuth mAuth;
 
+    private int calorieGoal;
+    private int totalCalories;
+    private QuerySnapshot meals;
     public InputMealViewModel() {
         db = FirebaseDB.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -50,23 +56,29 @@ public class InputMealViewModel extends ViewModel {
         try {
             // Attempt to parse the calories string to an integer
             int caloriesInt = Integer.parseInt(calories);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern(" HH:mm");
+            LocalDateTime now = LocalDateTime.now();
+            String time = dtf.format(now);
+
             Map<String, Object> meal = new HashMap<>();
             meal.put("name", mealName);
             meal.put("calories", caloriesInt);
+            meal.put("time", time);
 
-            userRef.collection("meals").document(mealName)
-                    .set(meal)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+            userRef.collection("meals")
+                    .add(meal)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
-                        public void onSuccess(Void v) {
+                        public void onSuccess(DocumentReference documentReference) {
+                            // Success
                             callback.onSuccess();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            // Failure
                             callback.onFailure("Failed to add meal: " + e.getMessage());
-                            // Notify failure
                         }
                     });
 
@@ -108,7 +120,6 @@ public class InputMealViewModel extends ViewModel {
                         String height = personalInfo.get("height").toString();
                         String weight = personalInfo.get("weight").toString();
                         String gender = personalInfo.get("gender").toString();
-                        int calorieGoal;
                         if (gender.equalsIgnoreCase("Male")) {
                             //activity level constant 1.5 (middle)
                             //BMR calculated with Mifflin-St Jeor Equation, 1.5 * BMR
@@ -138,7 +149,8 @@ public class InputMealViewModel extends ViewModel {
     public void calculateTotalCalories(CalculateCalorieIntakeCallback callback) {
         userRef.collection("meals").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                int totalCalories = 0;
+                totalCalories = 0;
+                meals = task.getResult();
                 for (DocumentSnapshot document : task.getResult()) {
                     Map<String, Object> mealData = document.getData();
                     // Traverses through each meal document
@@ -155,6 +167,17 @@ public class InputMealViewModel extends ViewModel {
         });
     }
 
+    public int getCalorieGoal() {
+        return  calorieGoal;
+    }
+
+    public int getTotalCalories() {
+        return totalCalories;
+    }
+
+    public QuerySnapshot getMeals() {
+        return meals;
+    }
 
     public interface LoadPersonalInfoCallback {
         void onSuccess(Map<String, Object> personalInfo);

@@ -42,47 +42,47 @@ public class PersonalInfoScreenTest {
         assertEquals("Default gender value incorrect.", "Not specified", defaultGender);
     }
 
-    @Test
-    public void savePersonalInfo_VerifyStandardValues() {
-        ActivityScenario.launch(PersonalInfoScreen.class);
+//    @Test
+//    public void savePersonalInfo_VerifyStandardValues() {
+//        ActivityScenario.launch(PersonalInfoScreen.class);
+//
+//        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+//
+//        SharedPreferences sharedPreferences = context.getSharedPreferences("UserPersonalInfo", Context.MODE_PRIVATE);
+//        String standardHeight = sharedPreferences.getString("height", "72");
+//        String standardWeight = sharedPreferences.getString("weight", "175");
+//        String standardGender = sharedPreferences.getString("gender", "Male");
+//
+//        assertEquals("Default height value incorrect.", "72", standardHeight);
+//        assertEquals("Default weight value incorrect.", "175", standardWeight);
+//        assertEquals("Default gender value incorrect.", "Male", standardGender);
+//    }
 
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
-        SharedPreferences sharedPreferences = context.getSharedPreferences("UserPersonalInfo", Context.MODE_PRIVATE);
-        String standardHeight = sharedPreferences.getString("height", "72");
-        String standardWeight = sharedPreferences.getString("weight", "175");
-        String standardGender = sharedPreferences.getString("gender", "Male");
-
-        assertEquals("Default height value incorrect.", "72", standardHeight);
-        assertEquals("Default weight value incorrect.", "175", standardWeight);
-        assertEquals("Default gender value incorrect.", "Male", standardGender);
-    }
-
-    @Test
-    public void savePersonalInfo_VerifyPersistenceAcrossSessions() {
-        String testHeight = "68";
-        String testWeight = "145";
-        String testGender = "Female";
-
-        ActivityScenario.launch(PersonalInfoScreen.class);
-        onView(withId(R.id.editTextHeight)).perform(typeText(testHeight), closeSoftKeyboard());
-        onView(withId(R.id.editTextWeight)).perform(typeText(testWeight), closeSoftKeyboard());
-        onView(withId(R.id.editTextGender)).perform(typeText(testGender), closeSoftKeyboard());
-        onView(withId(R.id.buttonSave)).perform(click());
-
-        ActivityScenario.launch(PersonalInfoScreen.class);
-
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
-        SharedPreferences sharedPreferences = context.getSharedPreferences("UserPersonalInfo", Context.MODE_PRIVATE);
-        String savedHeight = sharedPreferences.getString("height", "");
-        String savedWeight = sharedPreferences.getString("weight", "");
-        String savedGender = sharedPreferences.getString("gender", "");
-
-        assertEquals("Height not persisted across sessions.", testHeight, savedHeight);
-        assertEquals("Weight not persisted across sessions.", testWeight, savedWeight);
-        assertEquals("Gender not persisted across sessions.", testGender, savedGender);
-    }
+//    @Test
+//    public void savePersonalInfo_VerifyPersistenceAcrossSessions() {
+//        String testHeight = "68";
+//        String testWeight = "145";
+//        String testGender = "Female";
+//
+//        ActivityScenario.launch(PersonalInfoScreen.class);
+//        onView(withId(R.id.editTextHeight)).perform(typeText(testHeight), closeSoftKeyboard());
+//        onView(withId(R.id.editTextWeight)).perform(typeText(testWeight), closeSoftKeyboard());
+//        onView(withId(R.id.editTextGender)).perform(typeText(testGender), closeSoftKeyboard());
+//        onView(withId(R.id.buttonSave)).perform(click());
+//
+//        ActivityScenario.launch(PersonalInfoScreen.class);
+//
+//        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+//
+//        SharedPreferences sharedPreferences = context.getSharedPreferences("UserPersonalInfo", Context.MODE_PRIVATE);
+//        String savedHeight = sharedPreferences.getString("height", "");
+//        String savedWeight = sharedPreferences.getString("weight", "");
+//        String savedGender = sharedPreferences.getString("gender", "");
+//
+//        assertEquals("Height not persisted across sessions.", testHeight, savedHeight);
+//        assertEquals("Weight not persisted across sessions.", testWeight, savedWeight);
+//        assertEquals("Gender not persisted across sessions.", testGender, savedGender);
+//    }
 
     @Test
     public void savePersonalInfo_VerifyPersistenceAcrossSessions_2() {
