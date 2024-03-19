@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,7 @@ public class InputMealViewModel extends ViewModel {
 
     private int calorieGoal;
     private int totalCalories;
+    private QuerySnapshot meals;
     public InputMealViewModel() {
         db = FirebaseDB.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -140,6 +142,7 @@ public class InputMealViewModel extends ViewModel {
         userRef.collection("meals").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 totalCalories = 0;
+                meals = task.getResult();
                 for (DocumentSnapshot document : task.getResult()) {
                     Map<String, Object> mealData = document.getData();
                     // Traverses through each meal document
@@ -162,6 +165,10 @@ public class InputMealViewModel extends ViewModel {
 
     public int getTotalCalories() {
         return totalCalories;
+    }
+
+    public QuerySnapshot getMeals() {
+        return meals;
     }
 
     public interface LoadPersonalInfoCallback {
