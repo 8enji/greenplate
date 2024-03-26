@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -13,25 +13,86 @@
         android:layout_height="wrap_content"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_menu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_alignParentBottom="true"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="651dp" />
 
     <TextView
-        android:id="@+id/textViewInputMeal"
+        android:id="@+id/textViewRecipes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Recipes"
+        android:layout_centerHorizontal="true"
         android:textAlignment="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#000000"
         android:textSize="50sp"
         android:textStyle="bold"
         tools:layout_editor_absoluteX="116dp"
         tools:layout_editor_absoluteY="16dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/textViewAddNew"
+        android:layout_width="155dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/textViewRecipes"
+        android:text="Add New Recipe:"
+        android:textStyle="bold"
+        android:textSize="20sp" />
+
+
+    <EditText
+        android:id="@+id/editTextRecipeName"
+        android:layout_width="240dp"
+        android:layout_height="41dp"
+        android:layout_below="@id/textViewRecipes"
+        android:layout_toRightOf="@id/textViewAddNew"
+        android:hint="Recipe Name"
+        android:textSize="20sp"
+        tools:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textViewIngredients"
+        android:layout_width="125dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/editTextRecipeName"
+        android:text="Ingredients:"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/editTextInputDetails"
+        android:layout_width="3400dp"
+        android:layout_height="41dp"
+        android:layout_below="@id/textViewIngredients"
+        android:hint="{Ingredient Name} {Quantity} {Units}, ..."
+        android:textSize="20sp"
+        tools:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textViewNote"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_below="@id/editTextInputDetails"
+        android:text="Please only enter units as cup(s), tsp(s), tbsp(s), or oz"
+        android:textSize="13.5sp" />
+
+    <TextView
+        android:id="@+id/textViewNotew"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_below="@id/textViewNote"
+        android:layout_toLeftOf="@id/buttonAdd"
+        android:text="Please also put spaces between name, quanitity, units, and after the comma seperator"
+        android:textSize="13.5sp" />
+
+    <Button
+        android:id="@+id/buttonAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextInputDetails"
+        android:layout_alignParentRight="true"
+        android:text="Add"/>
+
+
+
+</RelativeLayout>
