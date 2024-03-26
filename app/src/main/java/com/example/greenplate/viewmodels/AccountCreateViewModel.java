@@ -5,11 +5,15 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
 import com.example.greenplate.model.FirebaseDB;
+import com.example.greenplate.model.Ingredient;
+import com.example.greenplate.model.Recipe;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,6 +66,7 @@ public class AccountCreateViewModel extends ViewModel {
                     }
                 });
     }
+
 
     public interface AuthCallback {
         void onSuccess();
