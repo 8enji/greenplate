@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.PersonalInfoScreen">
+    tools:context=".views.IngredientScreen">
 
     <TextView
-        android:id="@+id/textViewHeightLabel"
+        android:id="@+id/textViewIngredientNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextHeight"
+        android:id="@+id/editTextIngredientName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -27,10 +27,10 @@
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewHeightLabel" />
+        app:layout_constraintTop_toBottomOf="@id/textViewIngredientNameLabel" />
 
     <TextView
-        android:id="@+id/textViewWeightLabel"
+        android:id="@+id/textViewQuantityLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -38,10 +38,10 @@
         android:text="Quantity"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextHeight" />
+        app:layout_constraintTop_toBottomOf="@id/editTextIngredientName" />
 
     <EditText
-        android:id="@+id/editTextWeight"
+        android:id="@+id/editTextQuantity"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -49,10 +49,10 @@
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewWeightLabel" />
+        app:layout_constraintTop_toBottomOf="@id/textViewQuantityLabel" />
 
     <TextView
-        android:id="@+id/textViewGenderLabel"
+        android:id="@+id/textViewCaloriesPerServingLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -60,27 +60,27 @@
         android:text="Calories per serving/quantity"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextWeight" />
+        app:layout_constraintTop_toBottomOf="@id/editTextQuantity" />
 
     <EditText
-        android:id="@+id/editTextGender"
+        android:id="@+id/editTextCaloriesPerServing"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="Enter calories per serving/quantity"
+        android:hint="Enter gender"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewGenderLabel" />
+        app:layout_constraintTop_toBottomOf="@id/textViewCaloriesPerServingLabel" />
 
     <Button
         android:id="@+id/buttonSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
+        android:text="Enter Ingredient"
         android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextGender" />
+        app:layout_constraintTop_toBottomOf="@id/editTextCaloriesPerServing" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
