@@ -28,6 +28,6 @@ public class IngredientViewModel extends ViewModel {
             String email = currentUser.getEmail();
             userRef = db.collection("users").document(email);
         }
-        
+
 
 }
