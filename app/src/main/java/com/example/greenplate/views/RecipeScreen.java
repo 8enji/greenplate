@@ -16,6 +16,8 @@ import com.example.greenplate.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+
+
 public class RecipeScreen extends AppCompatActivity {
     private BottomNavigationView bottomNavigation;
     private Button buttonAdd;

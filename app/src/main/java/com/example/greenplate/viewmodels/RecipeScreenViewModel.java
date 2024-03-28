@@ -123,4 +123,29 @@ public class RecipeScreenViewModel extends ViewModel {
     }
 
 
+    private Recipe.SortingStrategy sortingStrategy;
+    private Recipe.FilteringStrategy filteringStrategy;
+
+    public void setSortingStrategy(Recipe.SortingStrategy strategy) {
+        this.sortingStrategy = strategy;
+    }
+
+    public void setFilteringStrategy(Recipe.FilteringStrategy strategy) {
+        this.filteringStrategy = strategy;
+    }
+
+    public ArrayList<Recipe> applySorting(ArrayList<Recipe> recipes) {
+        if (sortingStrategy != null) {
+            return sortingStrategy.sort(recipes);
+        }
+        return recipes;
+    }
+
+    public ArrayList<Recipe> applyFiltering(ArrayList<Recipe> recipes, String criterion) {
+        if (filteringStrategy != null) {
+            return filteringStrategy.filter(recipes, criterion);
+        }
+        return recipes;
+    }
+
 }
