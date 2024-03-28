@@ -4,11 +4,13 @@ public class Ingredient {
     private String name;
     private double quantity;
     private String units;
+    private int calories;
 
-    public Ingredient(String name, double quantity, String units) {
+    public Ingredient(String name, double quantity, String units, int calories) {
         this.name = name;
         this.quantity = quantity;
         this.units = units;
+        this.calories = calories;
     }
     public String getName() {
         return name;

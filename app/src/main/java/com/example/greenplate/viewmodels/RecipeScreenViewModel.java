@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import com.example.greenplate.model.Ingredient;
 import com.example.greenplate.model.Recipe;
 
+import org.w3c.dom.Document;
+
 public class RecipeScreenViewModel extends ViewModel {
     private FirebaseFirestore db;
     private DocumentReference userRef;
@@ -33,6 +35,45 @@ public class RecipeScreenViewModel extends ViewModel {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         String email = currentUser.getEmail();
         userRef = db.collection("users").document(email);
+    }
+
+    public void loadRecipes(LoadRecipesCallback callback) {
+        ArrayList<Recipe> recipes = new ArrayList<>();
+        ArrayList<String> cookable = new ArrayList();
+        db.collection("cookbook").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot recipesDocuments = task.getResult();
+                for (DocumentSnapshot document : recipesDocuments) {
+                    Map<String, Object> r = document.getData();
+                    Recipe recipe = new Recipe(r.get("name").toString(), (ArrayList<Ingredient>) r.get("ingredients"));
+                    recipes.add(recipe);
+                    ArrayList<Ingredient> pantry = getPantry();
+                    if (recipe.canCook(pantry)) {
+                        cookable.add("Yes");
+                    } else {
+                        cookable.add("No");
+                    }
+                }
+                callback.onSuccess(recipes, cookable);
+
+            } else {
+                callback.onFailure("recipes cannot be accessed");
+            }
+        });
+    }
+
+    public ArrayList<Ingredient> getPantry() {
+        ArrayList<Ingredient> ingredients = new ArrayList<>();
+        userRef.collection("pantry").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot ingredientDocuments = task.getResult();
+                for (DocumentSnapshot document : ingredientDocuments) {
+                    Map<String, Object> i = document.getData();
+                    ingredients.add(new Ingredient(i.get("name").toString(), (double) i.get("quantity"), i.get("unit").toString(), (int) i.get("calories")));
+                }
+            }
+        });
+        return ingredients;
     }
 
     public void createRecipe(String recipeName, String inputDetails, AuthCallback callback) {
@@ -119,6 +160,16 @@ public class RecipeScreenViewModel extends ViewModel {
 
     public interface AuthCallback {
         void onSuccess();
+        void onFailure(String error);
+    }
+
+    public interface GetPantryCallback {
+        void onSuccess();
+        void onFailure(String error);
+    }
+
+    public interface LoadRecipesCallback {
+        void onSuccess(ArrayList<Recipe> recipes, ArrayList<String> cookable);
         void onFailure(String error);
     }
 

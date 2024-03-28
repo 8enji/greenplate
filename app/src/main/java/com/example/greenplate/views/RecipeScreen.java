@@ -10,17 +10,23 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.greenplate.viewmodels.RecipeScreenViewModel;
 import com.example.greenplate.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.ArrayList;
+import com.example.greenplate.model.Recipe;
+
 public class RecipeScreen extends AppCompatActivity {
     private BottomNavigationView bottomNavigation;
     private Button buttonAdd;
     private EditText editTextRecipeName;
     private EditText editTextInputDetails;
+    private RecyclerView recyclerView;
     private RecipeScreenViewModel viewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +37,9 @@ public class RecipeScreen extends AppCompatActivity {
         buttonAdd = findViewById(R.id.buttonAdd);
         editTextInputDetails = findViewById(R.id.editTextInputDetails);
         editTextRecipeName = findViewById(R.id.editTextRecipeName);
+        recyclerView = findViewById(R.id.recipesRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        loadRecipes();
 
         buttonAdd.setOnClickListener(v -> {
             String recipeName = editTextRecipeName.getText().toString();
@@ -59,6 +68,25 @@ public class RecipeScreen extends AppCompatActivity {
                     startActivity(intent);
                 }
                 return false;
+            }
+        });
+    }
+
+    private void loadRecipes() {
+        viewModel.loadRecipes(new RecipeScreenViewModel.LoadRecipesCallback() {
+            //Handle successful loading of recipes and update UI
+            @Override
+            public void onSuccess(ArrayList<Recipe> recipes, ArrayList<String> cookable) {
+                //handle setting recylcer view elements to all the recipes
+                RecipeAdapter adapter = new RecipeAdapter(recipes, cookable);
+                recyclerView.setAdapter(adapter);
+            }
+
+            //Handle failure loading of recipes and update UI
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(RecipeScreen.this,
+                        "Failed to load recipes: " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }
