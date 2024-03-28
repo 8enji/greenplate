@@ -12,6 +12,8 @@ public class Ingredient {
         this.units = units;
         this.calories = calories;
     }
+
+    public int getCalories() { return calories;}
     public String getName() {
         return name;
     }
@@ -21,4 +23,6 @@ public class Ingredient {
     public String getUnits() {
         return units;
     }
+
+
 }
