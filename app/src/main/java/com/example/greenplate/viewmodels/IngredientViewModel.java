@@ -1,6 +1,7 @@
 package com.example.greenplate.viewmodels;
 
 import com.example.greenplate.model.FirebaseDB;
+import com.example.greenplate.model.Ingredient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import androidx.annotation.NonNull;
@@ -66,15 +67,16 @@ public class IngredientViewModel extends ViewModel {
                             callback.onFailure("Ingredient already exists in the pantry");
                         } else {
                             // Ingredient does not exist, proceed to add
-                            Map<String, Object> ingredient = new HashMap<>();
-                            ingredient.put("name", ingredientName);
-                            ingredient.put("quantity", quantityInt);
-                            ingredient.put("units", unit);
-                            ingredient.put("calories", caloriesInt);
-                            ingredient.put("time", time);
+                            Ingredient ingredient = new Ingredient(ingredientName, quantityInt, unit, caloriesInt);
+                            Map<String, Object> ingredientMap = new HashMap<>();
+                            ingredientMap.put("name", ingredientName);
+                            ingredientMap.put("quantity", quantityInt);
+                            ingredientMap.put("units", unit);
+                            ingredientMap.put("calories", caloriesInt);
+                            ingredientMap.put("time", time);
 
-                            userRef.collection("pantry")
-                                    .add(ingredient)
+                            userRef.collection("pantry").document(ingredient.getName())
+                                    .set(ingredientMap)
                                     .addOnSuccessListener(documentReference -> callback.onSuccess())
                                     .addOnFailureListener(e -> callback.onFailure("Failed to add ingredient: " + e.getMessage()));
                         }
