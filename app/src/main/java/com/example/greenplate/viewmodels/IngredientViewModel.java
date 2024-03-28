@@ -30,7 +30,6 @@ public class IngredientViewModel extends ViewModel {
             String email = currentUser.getEmail();
             userRef = db.collection("users").document(email);
         }
-
     public void createIngredient(
             String ingredientName, String quantity, String units,
             String calories, IngredientViewModel.AuthCallback callback) {
@@ -89,5 +88,4 @@ public class IngredientViewModel extends ViewModel {
         void onSuccess();
         void onFailure(String error);
     }
-
 }
