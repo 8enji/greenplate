@@ -73,14 +73,13 @@ public class IngredientScreen extends AppCompatActivity {
     }
 
     private void createIngredient(String ingredientName, String quantity, String calories) {
-        viewModel.createIngredient(ingredientName, quantity, calories, new IngredientViewModel.AuthCallBack() {
+        viewModel.createIngredient(ingredientName, quantity, calories, new IngredientViewModel.AuthCallback() {
             @Override
             public void onSuccess() {
                 Toast.makeText(IngredientScreen.this,
                         "Ingredient added", Toast.LENGTH_SHORT).show();
                 finish();
             }
-
             @Override
             public void onFailure(String error) {
                 Toast.makeText(IngredientScreen.this,
@@ -88,4 +87,5 @@ public class IngredientScreen extends AppCompatActivity {
             }
         });
     }
+
 }

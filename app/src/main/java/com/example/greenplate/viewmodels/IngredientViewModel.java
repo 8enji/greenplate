@@ -31,10 +31,10 @@ public class IngredientViewModel extends ViewModel {
             userRef = db.collection("users").document(email);
         }
     public void createIngredient(
-            String ingredientName, String quantity, String units,
-            String calories, IngredientViewModel.AuthCallback callback) {
+            String ingredientName, String quantity,
+            String calories, AuthCallback callback) {
 
-        if (ingredientName.isEmpty() || calories.isEmpty() || units.isEmpty() || quantity.isEmpty()) {
+        if (ingredientName.isEmpty() || calories.isEmpty() || quantity.isEmpty()) {
             //null checking
             callback.onFailure("Ingredient Name, Quantity, Units, and Calories are required");
             return;
