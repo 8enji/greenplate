@@ -15,6 +15,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IngredientViewModel extends ViewModel {
         private FirebaseFirestore db;
@@ -28,6 +30,4 @@ public class IngredientViewModel extends ViewModel {
             String email = currentUser.getEmail();
             userRef = db.collection("users").document(email);
         }
-
-
 }
