@@ -30,4 +30,67 @@ public class IngredientViewModel extends ViewModel {
             String email = currentUser.getEmail();
             userRef = db.collection("users").document(email);
         }
+    public void createIngredient(
+            String ingredientName, String quantity,
+            String calories, AuthCallback callback) {
+
+        if (ingredientName.isEmpty() || calories.isEmpty() || quantity.isEmpty()) {
+            //null checking
+            callback.onFailure("Ingredient Name, Quantity, Units, and Calories are required");
+            return;
+        }
+        if (calories.contains(" ")) {
+            //calories will not parse to an int
+            callback.onFailure("Calories cannot contain whitespace");
+            return;
+        }
+        if (calories.contains("-")) {
+            //calories cannot be negative
+            callback.onFailure("Calories cannot be negative");
+            return;
+        }
+        try {
+            // Attempt to parse the calories string to an integer
+            int caloriesInt = Integer.parseInt(calories);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern(" HH:mm");
+            LocalDateTime now = LocalDateTime.now();
+            String time = dtf.format(now);
+            String[] parts = quantity.split(" ");
+            int quantityInt = Integer.parseInt(parts[0]);
+            String unit = parts[1];
+
+            Map<String, Object> ingredient = new HashMap<>();
+            ingredient.put("name", ingredientName);
+            ingredient.put("quantity", quantityInt);
+            ingredient.put("units", unit);
+            ingredient.put("calories", caloriesInt);
+            ingredient.put("time", time);
+
+            userRef.collection("pantry")
+                    .add(ingredient)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            // Success
+                            callback.onSuccess();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Failure
+                            callback.onFailure("Failed to add ingredient: " + e.getMessage());
+                        }
+                    });
+
+        } catch (NumberFormatException e) {
+            // Parse Fails
+            callback.onFailure("Calories must be a valid number");
+            return;
+        }
+    }
+    public interface AuthCallback {
+        void onSuccess();
+        void onFailure(String error);
+    }
 }

@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+
 import com.example.greenplate.viewmodels.IngredientViewModel;
 
 import android.view.View;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.greenplate.R;
 import com.example.greenplate.viewmodels.InputMealViewModel;
+import com.example.greenplate.viewmodels.RecipeScreenViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -69,14 +73,13 @@ public class IngredientScreen extends AppCompatActivity {
     }
 
     private void createIngredient(String ingredientName, String quantity, String calories) {
-        viewModel.createIngredient(ingredientName, quantity, calories, new IngredientViewModel.AuthCallBack() {
+        viewModel.createIngredient(ingredientName, quantity, calories, new IngredientViewModel.AuthCallback() {
             @Override
             public void onSuccess() {
                 Toast.makeText(IngredientScreen.this,
                         "Ingredient added", Toast.LENGTH_SHORT).show();
                 finish();
             }
-
             @Override
             public void onFailure(String error) {
                 Toast.makeText(IngredientScreen.this,
@@ -84,4 +87,5 @@ public class IngredientScreen extends AppCompatActivity {
             }
         });
     }
+
 }
