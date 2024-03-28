@@ -5,10 +5,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -19,17 +15,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class IngredientViewModel extends ViewModel {
-        private FirebaseFirestore db;
-        private DocumentReference userRef;
-        private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private DocumentReference userRef;
+    private FirebaseAuth mAuth;
 
-        public IngredientViewModel() {
-            db = FirebaseDB.getInstance();
-            mAuth = FirebaseAuth.getInstance();
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-            String email = currentUser.getEmail();
-            userRef = db.collection("users").document(email);
-        }
+    public IngredientViewModel() {
+        db = FirebaseDB.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String email = currentUser.getEmail();
+        userRef = db.collection("users").document(email);
+    }
+
     public void createIngredient(
             String ingredientName, String quantity,
             String calories, AuthCallback callback) {
@@ -37,10 +34,6 @@ public class IngredientViewModel extends ViewModel {
         if (ingredientName.isEmpty() || calories.isEmpty() || quantity.isEmpty()) {
             //null checking
             callback.onFailure("Ingredient Name, Quantity, Units, and Calories are required");
-            return;
-        }
-        if ((ingredient.get("name").equals(ingredientName))) {
-            callback.onFailure("Duplicate ingredients not allowed");
             return;
         }
         if (calories.contains(" ")) {
@@ -54,9 +47,8 @@ public class IngredientViewModel extends ViewModel {
             return;
         }
         try {
-            // Attempt to parse the calories string to an integer
             int caloriesInt = Integer.parseInt(calories);
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern(" HH:mm");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
             LocalDateTime now = LocalDateTime.now();
             String time = dtf.format(now);
             String[] parts = quantity.split(" ");
@@ -67,37 +59,34 @@ public class IngredientViewModel extends ViewModel {
             }
             String unit = parts[1];
 
-            Map<String, Object> ingredient = new HashMap<>();
+            userRef.collection("pantry").whereEqualTo("name", ingredientName).get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            // Ingredient already exists
+                            callback.onFailure("Ingredient already exists in the pantry");
+                        } else {
+                            // Ingredient does not exist, proceed to add
+                            Map<String, Object> ingredient = new HashMap<>();
+                            ingredient.put("name", ingredientName);
+                            ingredient.put("quantity", quantityInt);
+                            ingredient.put("units", unit);
+                            ingredient.put("calories", caloriesInt);
+                            ingredient.put("time", time);
 
-            ingredient.put("name", ingredientName);
-            ingredient.put("quantity", quantityInt);
-            ingredient.put("units", unit);
-            ingredient.put("calories", caloriesInt);
-            ingredient.put("time", time);
-
-            userRef.collection("pantry")
-                    .add(ingredient)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            // Success
-                            callback.onSuccess();
+                            userRef.collection("pantry")
+                                    .add(ingredient)
+                                    .addOnSuccessListener(documentReference -> callback.onSuccess())
+                                    .addOnFailureListener(e -> callback.onFailure("Failed to add ingredient: " + e.getMessage()));
                         }
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Failure
-                            callback.onFailure("Failed to add ingredient: " + e.getMessage());
-                        }
-                    });
+                    .addOnFailureListener(e -> callback.onFailure("Failed to check if ingredient exists: " + e.getMessage()));
 
         } catch (NumberFormatException e) {
             // Parse Fails
             callback.onFailure("Calories must be a valid number");
-            return;
         }
     }
+
     public interface AuthCallback {
         void onSuccess();
         void onFailure(String error);
