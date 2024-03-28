@@ -7,17 +7,23 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+
 import com.example.greenplate.viewmodels.IngredientViewModel;
 
 
 import com.example.greenplate.R;
 import com.example.greenplate.viewmodels.InputMealViewModel;
+import com.example.greenplate.viewmodels.RecipeScreenViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class IngredientScreen extends AppCompatActivity {
     private IngredientViewModel viewModel;
     private BottomNavigationView bottomNavigation;
+    private Button buttonSave;
+    private EditText editTextIngredientName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

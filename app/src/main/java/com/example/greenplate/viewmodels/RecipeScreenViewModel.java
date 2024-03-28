@@ -80,7 +80,8 @@ public class RecipeScreenViewModel extends ViewModel {
                 //remove the quantity from the string
                 currentIngredient = currentIngredient.substring(0, index);
                 String ingredientName = currentIngredient;
-                ingredients.add(new Ingredient(ingredientName, quantityDouble, unit));
+                int calories = 0;
+                ingredients.add(new Ingredient(ingredientName, quantityDouble, unit, calories));
 
                 //removes entire current string from input string to go to the next ingredient
                 if (!lastIngredient) {
