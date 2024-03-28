@@ -39,6 +39,10 @@ public class IngredientViewModel extends ViewModel {
             callback.onFailure("Ingredient Name, Quantity, Units, and Calories are required");
             return;
         }
+        if ((ingredient.get("name").equals(ingredientName))) {
+            callback.onFailure("Duplicate ingredients not allowed");
+            return;
+        }
         if (calories.contains(" ")) {
             //calories will not parse to an int
             callback.onFailure("Calories cannot contain whitespace");
@@ -57,9 +61,14 @@ public class IngredientViewModel extends ViewModel {
             String time = dtf.format(now);
             String[] parts = quantity.split(" ");
             int quantityInt = Integer.parseInt(parts[0]);
+            if (quantityInt < 0) {
+                callback.onFailure("Quantity cannot be negative");
+                return;
+            }
             String unit = parts[1];
 
             Map<String, Object> ingredient = new HashMap<>();
+
             ingredient.put("name", ingredientName);
             ingredient.put("quantity", quantityInt);
             ingredient.put("units", unit);
