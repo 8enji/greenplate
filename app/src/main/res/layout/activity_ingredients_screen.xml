@@ -24,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="Enter Ingredient Name"
-        android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewIngredientNameLabel" />
@@ -46,7 +45,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="Enter quantity"
-        android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewQuantityLabel" />
@@ -67,7 +65,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="Enter gender"
+        android:hint="Enter calories per serving"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewCaloriesPerServingLabel" />

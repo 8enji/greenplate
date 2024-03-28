@@ -55,9 +55,14 @@ public class IngredientViewModel extends ViewModel {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern(" HH:mm");
             LocalDateTime now = LocalDateTime.now();
             String time = dtf.format(now);
+            String[] parts = quantity.split(" ");
+            int quantityInt = Integer.parseInt(parts[0]);
+            String unit = parts[1];
 
             Map<String, Object> ingredient = new HashMap<>();
             ingredient.put("name", ingredientName);
+            ingredient.put("quantity", quantityInt);
+            ingredient.put("units", unit);
             ingredient.put("calories", caloriesInt);
             ingredient.put("time", time);
 
