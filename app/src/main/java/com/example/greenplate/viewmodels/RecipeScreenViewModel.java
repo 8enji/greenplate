@@ -30,7 +30,7 @@ public class RecipeScreenViewModel extends ViewModel {
     private FirebaseFirestore db;
     private DocumentReference userRef;
     private FirebaseAuth mAuth;
-    private QuerySnapshot ingredientDocuments;
+    private ArrayList<Ingredient> globalPantry;
 
     public RecipeScreenViewModel() {
         db = FirebaseDB.getInstance();
@@ -48,33 +48,36 @@ public class RecipeScreenViewModel extends ViewModel {
                 QuerySnapshot recipesDocuments = task.getResult();
                 for (DocumentSnapshot document : recipesDocuments) {
                     Map<String, Object> r = document.getData();
-                    ArrayList<Map> ingredientsMaps = (ArrayList<Map>) r.get("ingredients");
+                    ArrayList<HashMap<String, Object>> rI = (ArrayList<HashMap<String, Object>>) r.get("ingredients");
                     ArrayList<Ingredient> recipeIngredients = new ArrayList<Ingredient>();
-                    for (Map m : ingredientsMaps) {
-                        recipeIngredients.add(new Ingredient(m.get("name").toString(), Double.parseDouble(m.get("quantity").toString()), m.get("units").toString(), (int) m.get("calories")));
+                    for (int i = 0; i < rI.size(); i++) {
+                        Ingredient ingr = new Ingredient(rI.get(i).get("name").toString(), (double) rI.get(i).get("quantity"), rI.get(i).get("units").toString(), 0);
+                        recipeIngredients.add(ingr);
                     }
+                    //ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
                     Recipe recipe = new Recipe(r.get("name").toString(), recipeIngredients);
                     recipes.add(recipe);
-                    getPantry(new GetPantryCallBack() {
-                        @Override
-                        public void onSuccess(ArrayList<Ingredient> ingredients) {
-                            if (recipe.canCook(ingredients)) {
-                                cookable.add("Yes");
-                            } else {
-                                cookable.add("No");
-                            }
-                        }
+                }
+                getPantry(new GetPantryCallBack() {
+                    @Override
+                    public void onSuccess(ArrayList<Ingredient> pantry) {
+                        globalPantry = pantry;
+                    }
 
-                        @Override
-                        public void onFailure(String error) {
-                            callback.onFailure("Pantry cannot be accessed");
-                        }
-                    });
+                    @Override
+                    public void onFailure(String error) {
+                        callback.onFailure("Pantry cannot be accessed");
+                    }
+                });
+                System.out.println(globalPantry);
+                for (Recipe r : recipes) {
+                    if (r.canCook(globalPantry)) {
+                        cookable.add("Yes");
+                    } else {
+                        cookable.add("No");
+                    }
                 }
-                /*for (int i = 0; i < recipes.size(); i++) {
-                    cookable.add("Yes");
-                }
-                callback.onSuccess(recipes, cookable)*/;
+                callback.onSuccess(recipes, cookable);
 
             } else {
                 callback.onFailure("recipes cannot be accessed");
@@ -83,19 +86,22 @@ public class RecipeScreenViewModel extends ViewModel {
     }
 
     public void getPantry(GetPantryCallBack callback) {
-        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+        System.out.println("We are here");
+        ArrayList<Ingredient> pantry = new ArrayList<Ingredient>();
         userRef.collection("pantry").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                ingredientDocuments = task.getResult();
-                for (DocumentSnapshot document : ingredientDocuments) {
+                System.out.println("Task is successful!");
+                QuerySnapshot ingredientDocuments = task.getResult();
+                for (DocumentSnapshot document : task.getResult()) {
                     Map<String, Object> i = document.getData();
-                    //ingredients.add(new Ingredient(i.get("name").toString(), (double) i.get("quantity"), i.get("units").toString(), (int) i.get("calories")));
-                    ingredients.add(new Ingredient("Dumm", 2, "cups", 2));
+                    Ingredient ingre = new Ingredient(i.get("name").toString(), (double) i.get("quantity"), i.get("units").toString(), (int) i.get("calories"));
+                    pantry.add(ingre);
                 }
-                callback.onSuccess(ingredients);
+                System.out.println("We are about to callback with pantry");
+                callback.onSuccess(pantry);
             } else {
-                callback.onFailure("Failed to Access pantry: "
-                + task.getException().getMessage());
+                System.out.println("Task failed you suck");
+                callback.onFailure("Failed to access pantry: " + task.getException().getMessage());
             }
         });
     }
@@ -162,12 +168,9 @@ public class RecipeScreenViewModel extends ViewModel {
             System.out.println(i.getName() + " " + i.getQuantity() + " " + i.getUnits());
         }
         Recipe recipe = new Recipe(recipeName, ingredients);
-        Map<String, Object> recipeMap = new HashMap<>();
-        recipeMap.put("name", recipe.getName());
-        recipeMap.put("ingredients", recipe.getIngredients());
 
         db.collection("cookbook").document(recipe.getName())
-                .set(recipeMap)
+                .set(recipe)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void v) {
@@ -195,7 +198,7 @@ public class RecipeScreenViewModel extends ViewModel {
     }
 
     public interface GetPantryCallBack {
-        void onSuccess(ArrayList<Ingredient> ingredients);
+        void onSuccess(ArrayList<Ingredient> pantry);
         void onFailure(String error);
     }
 
