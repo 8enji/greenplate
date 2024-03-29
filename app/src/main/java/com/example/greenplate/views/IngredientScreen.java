@@ -2,7 +2,9 @@ package com.example.greenplate.views;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -11,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.greenplate.model.Ingredient;
 import com.example.greenplate.viewmodels.IngredientViewModel;
 
 import android.view.View;
@@ -24,6 +27,8 @@ import com.example.greenplate.viewmodels.RecipeScreenViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.List;
+
 public class IngredientScreen extends AppCompatActivity {
     private IngredientViewModel viewModel;
     private BottomNavigationView bottomNavigation;
@@ -31,6 +36,9 @@ public class IngredientScreen extends AppCompatActivity {
     private Button addIngredientButton;
 
     private IngredientViewModel ingredientViewModel;
+
+    private RecyclerView recyclerView;
+    private IngredientsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +51,16 @@ public class IngredientScreen extends AppCompatActivity {
         addIngredientButton.setOnClickListener(v -> {
             Intent intent = new Intent(IngredientScreen.this, IngredientsFormScreen.class);
             startActivity(intent);
+        });
+
+//        LiveData<List<Ingredient>> ingredients = ingredientViewModel.getAllIngredients();
+        recyclerView = findViewById(R.id.ingredientsRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new IngredientsAdapter();
+        recyclerView.setAdapter(adapter);
+
+        viewModel.getAllIngredients().observe(this, ingredients -> {
+            adapter.setIngredients(ingredients);
         });
 
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomNavigation);

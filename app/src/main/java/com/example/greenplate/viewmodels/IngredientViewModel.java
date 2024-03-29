@@ -15,6 +15,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,28 @@ public class IngredientViewModel extends ViewModel {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         String email = currentUser.getEmail();
         userRef = db.collection("users").document(email);
+    }
+
+    public LiveData<List<Ingredient>> getAllIngredients() {
+        MutableLiveData<List<Ingredient>> ingredientsLiveData = new MutableLiveData<>();
+
+        userRef.collection("pantry").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                List<Ingredient> ingredientList = new ArrayList<>();
+                for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                    Ingredient ingredient = documentSnapshot.toObject(Ingredient.class);
+                    if (ingredient != null) {
+                        ingredientList.add(ingredient);
+                    }
+                }
+                ingredientsLiveData.postValue(ingredientList);
+            } else {
+                // Optionally handle error or empty state
+                ingredientsLiveData.postValue(Collections.emptyList());
+            }
+        });
+
+        return ingredientsLiveData;
     }
 
     public void createIngredient(
