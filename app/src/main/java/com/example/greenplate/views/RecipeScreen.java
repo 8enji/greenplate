@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.greenplate.model.Ingredient;
 import com.example.greenplate.viewmodels.RecipeScreenViewModel;
 import com.example.greenplate.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -28,6 +29,7 @@ public class RecipeScreen extends AppCompatActivity {
     private EditText editTextInputDetails;
     private RecyclerView recyclerView;
     private RecipeScreenViewModel viewModel;
+    private ArrayList<Ingredient> globalPantry;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +41,9 @@ public class RecipeScreen extends AppCompatActivity {
         editTextRecipeName = findViewById(R.id.editTextRecipeName);
         recyclerView = findViewById(R.id.recipesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        loadRecipes();
+        loadPantry();
+
+
 
         buttonAdd.setOnClickListener(v -> {
             String recipeName = editTextRecipeName.getText().toString();
@@ -72,8 +76,24 @@ public class RecipeScreen extends AppCompatActivity {
         });
     }
 
+    private void loadPantry() {
+        viewModel.getPantry(new RecipeScreenViewModel.GetPantryCallBack() {
+            @Override
+            public void onSuccess(ArrayList<Ingredient> pantry) {
+                globalPantry = pantry;
+                loadRecipes();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(RecipeScreen.this,
+                        "Failed to access pantry: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void loadRecipes() {
-        viewModel.loadRecipes(new RecipeScreenViewModel.LoadRecipesCallback() {
+        viewModel.loadRecipes(globalPantry, new RecipeScreenViewModel.LoadRecipesCallback() {
             //Handle successful loading of recipes and update UI
             @Override
             public void onSuccess(ArrayList<Recipe> recipes, ArrayList<String> cookable) {

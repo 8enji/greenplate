@@ -52,13 +52,10 @@ public class IngredientViewModel extends ViewModel {
             return;
         }
         try {
-            int caloriesInt = Integer.parseInt(calories);
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-            LocalDateTime now = LocalDateTime.now();
-            String time = dtf.format(now);
+            double caloriesDouble = Double.parseDouble(calories);
             String[] parts = quantity.split(" ");
-            int quantityInt = Integer.parseInt(parts[0]);
-            if (quantityInt < 0) {
+            double quantityDouble = Double.parseDouble(parts[0]);
+            if (quantityDouble < 0) {
                 callback.onFailure("Quantity cannot be negative");
                 return;
             }
@@ -71,13 +68,12 @@ public class IngredientViewModel extends ViewModel {
                             callback.onFailure("Ingredient already exists in the pantry");
                         } else {
                             // Ingredient does not exist, proceed to add
-                            Ingredient ingredient = new Ingredient(ingredientName, quantityInt, unit, caloriesInt);
+                            Ingredient ingredient = new Ingredient(ingredientName, quantityDouble, unit, caloriesDouble);
                             Map<String, Object> ingredientMap = new HashMap<>();
                             ingredientMap.put("name", ingredientName);
-                            ingredientMap.put("quantity", quantityInt);
+                            ingredientMap.put("quantity", quantityDouble);
                             ingredientMap.put("units", unit);
-                            ingredientMap.put("calories", caloriesInt);
-                            ingredientMap.put("time", time);
+                            ingredientMap.put("calories", caloriesDouble);
 
                             userRef.collection("pantry").document(ingredient.getName())
                                     .set(ingredientMap)
