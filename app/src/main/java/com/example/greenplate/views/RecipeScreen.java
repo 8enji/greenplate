@@ -3,6 +3,7 @@ package com.example.greenplate.views;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,12 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.greenplate.model.Ingredient;
+import com.example.greenplate.model.SortingStrategies;
 import com.example.greenplate.viewmodels.RecipeScreenViewModel;
 import com.example.greenplate.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
+
 import com.example.greenplate.model.Recipe;
 
 public class RecipeScreen extends AppCompatActivity {
@@ -30,6 +33,11 @@ public class RecipeScreen extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecipeScreenViewModel viewModel;
     private ArrayList<Ingredient> globalPantry;
+    private Button buttonSortByName;
+    private Button buttonFilterByCookable;
+
+    private ArrayList<Recipe> recipes;
+    private ArrayList<String> cookable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +49,25 @@ public class RecipeScreen extends AppCompatActivity {
         editTextRecipeName = findViewById(R.id.editTextRecipeName);
         recyclerView = findViewById(R.id.recipesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        loadPantry();
+
+        buttonSortByName = findViewById(R.id.buttonSortByName);
+        buttonFilterByCookable = findViewById(R.id.buttonFilterByCookable);
+
+        buttonSortByName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.setSortingStrategy(new SortingStrategies.SortByNameStrategy());
+                sortRecipes();
+            }
+        });
+
+        buttonFilterByCookable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.setFilteringStrategy(new SortingStrategies.FilterByCookableStrategy());
+                filterRecipes(); // Call the correct method here
+            }
+        });
 
 
 
@@ -49,7 +75,10 @@ public class RecipeScreen extends AppCompatActivity {
             String recipeName = editTextRecipeName.getText().toString();
             String inputDetails = editTextInputDetails.getText().toString();
             createRecipe(recipeName, inputDetails);
+
         });
+
+        loadPantry();
 
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomNavigation);
         bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -74,7 +103,36 @@ public class RecipeScreen extends AppCompatActivity {
                 return false;
             }
         });
+
+
+
+
     }
+
+    private void sortRecipes() {
+        viewModel.sortRecipes(recipes);
+        RecipeAdapter adapter = new RecipeAdapter(recipes, cookable);
+        recyclerView.setAdapter(adapter);
+    }
+
+    // Method to be called when the "Filter by Cookable" button is pressed
+    private void filterRecipes() {
+        ArrayList<Recipe> filteredRecipes = viewModel.filterRecipes(recipes, cookable);
+        ArrayList<String> filteredCookable = new ArrayList<>();
+        for (Recipe r : filteredRecipes) {
+            filteredCookable.add("Yes");
+        }
+
+        // Update the UI with filtered recipes
+        RecipeAdapter adapter = new RecipeAdapter(filteredRecipes, filteredCookable);
+        recyclerView.setAdapter(adapter);
+
+        // Notify the user if no recipes are found after filtering
+        if (filteredRecipes.isEmpty()) {
+            Toast.makeText(this, "No recipes found after filtering", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     private void loadPantry() {
         viewModel.getPantry(new RecipeScreenViewModel.GetPantryCallBack() {
@@ -94,10 +152,13 @@ public class RecipeScreen extends AppCompatActivity {
 
     private void loadRecipes() {
         viewModel.loadRecipes(globalPantry, new RecipeScreenViewModel.LoadRecipesCallback() {
-            //Handle successful loading of recipes and update UI
             @Override
-            public void onSuccess(ArrayList<Recipe> recipes, ArrayList<String> cookable) {
-                //handle setting recylcer view elements to all the recipes
+            public void onSuccess(ArrayList<Recipe> loadedRecipes, ArrayList<String> loadedCookable) {
+                // Update the member variables 'recipes' and 'cookable' with the loaded data
+                RecipeScreen.this.recipes = loadedRecipes;
+                RecipeScreen.this.cookable = loadedCookable;
+
+                // Update the RecyclerView with the new data
                 RecipeAdapter adapter = new RecipeAdapter(recipes, cookable);
                 recyclerView.setAdapter(adapter);
             }
@@ -105,8 +166,7 @@ public class RecipeScreen extends AppCompatActivity {
             //Handle failure loading of recipes and update UI
             @Override
             public void onFailure(String error) {
-                Toast.makeText(RecipeScreen.this,
-                        "Failed to load recipes: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(RecipeScreen.this, "Failed to load recipes: " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }
