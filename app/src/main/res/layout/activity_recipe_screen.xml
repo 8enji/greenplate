@@ -103,6 +103,16 @@
         android:textSize="25dp"
         android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/textViewCookable"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_below="@id/textViewNote2"
+        android:layout_alignParentRight="true"
+        android:text="Cookable? "
+        android:textStyle="bold"
+        android:textSize="25dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipesRecyclerView"
         android:layout_width="345dp"
