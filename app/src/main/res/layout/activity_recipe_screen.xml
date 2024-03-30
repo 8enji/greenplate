@@ -98,7 +98,6 @@
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_below="@id/textViewNote2"
-        android:layout_marginTop="28dp"
         android:text="Available Recipes"
         android:textSize="25dp"
         android:textStyle="bold" />
@@ -115,18 +114,16 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipesRecyclerView"
-        android:layout_width="345dp"
-        android:layout_height="208dp"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
         android:layout_below="@id/textViewAvailableRecipes"
-        android:layout_marginTop="3dp"
         android:scrollbars="vertical" />
 
     <Button
         android:id="@+id/buttonSortByName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="572dp"
+        android:layout_below="@id/recipesRecyclerView"
         android:text="Sort by Name"
         />
 
@@ -134,9 +131,8 @@
         android:id="@+id/buttonFilterByCookable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="110dp"
+        android:layout_alignParentRight="true"
         android:layout_below="@id/recipesRecyclerView"
-        android:layout_toRightOf="@id/buttonSortByName"
         android:text="Filter by Cookable"
         />
 

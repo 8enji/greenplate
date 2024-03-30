@@ -2,10 +2,8 @@ package com.example.greenplate.views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,14 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.greenplate.model.Ingredient;
-import com.example.greenplate.strategy.SortingStrategies;
+import com.example.greenplate.model.SortingStrategies;
 import com.example.greenplate.viewmodels.RecipeScreenViewModel;
 import com.example.greenplate.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
-import android.widget.ArrayAdapter;
+
 import com.example.greenplate.model.Recipe;
 
 public class RecipeScreen extends AppCompatActivity {
@@ -113,15 +111,20 @@ public class RecipeScreen extends AppCompatActivity {
 
     private void sortRecipes() {
         viewModel.sortRecipes(recipes);
-        updateRecyclerView();
+        RecipeAdapter adapter = new RecipeAdapter(recipes, cookable);
+        recyclerView.setAdapter(adapter);
     }
 
     // Method to be called when the "Filter by Cookable" button is pressed
     private void filterRecipes() {
         ArrayList<Recipe> filteredRecipes = viewModel.filterRecipes(recipes, cookable);
+        ArrayList<String> filteredCookable = new ArrayList<>();
+        for (Recipe r : filteredRecipes) {
+            filteredCookable.add("Yes");
+        }
 
         // Update the UI with filtered recipes
-        RecipeAdapter adapter = new RecipeAdapter(filteredRecipes, cookable);
+        RecipeAdapter adapter = new RecipeAdapter(filteredRecipes, filteredCookable);
         recyclerView.setAdapter(adapter);
 
         // Notify the user if no recipes are found after filtering
@@ -130,11 +133,6 @@ public class RecipeScreen extends AppCompatActivity {
         }
     }
 
-    // Method to refresh the RecyclerView
-    private void updateRecyclerView() {
-        RecipeAdapter adapter = new RecipeAdapter(recipes, cookable);
-        recyclerView.setAdapter(adapter);
-    }
 
     private void loadPantry() {
         viewModel.getPantry(new RecipeScreenViewModel.GetPantryCallBack() {
@@ -154,22 +152,6 @@ public class RecipeScreen extends AppCompatActivity {
 
     private void loadRecipes() {
         viewModel.loadRecipes(globalPantry, new RecipeScreenViewModel.LoadRecipesCallback() {
-            //Handle successful loading of recipes and update UI
-//            @Override
-//            public void onSuccess(ArrayList<Recipe> recipes, ArrayList<String> cookable) {
-//                //handle setting recylcer view elements to all the recipes
-//                RecipeAdapter adapter = new RecipeAdapter(recipes, cookable);
-//                recyclerView.setAdapter(adapter);
-//            }
-//
-//            //Handle failure loading of recipes and update UI
-//            @Override
-//            public void onFailure(String error) {
-//                Toast.makeText(RecipeScreen.this,
-//                        "Failed to load recipes: " + error, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-            //Handle successful loading of recipes and update UI
             @Override
             public void onSuccess(ArrayList<Recipe> loadedRecipes, ArrayList<String> loadedCookable) {
                 // Update the member variables 'recipes' and 'cookable' with the loaded data
@@ -177,7 +159,8 @@ public class RecipeScreen extends AppCompatActivity {
                 RecipeScreen.this.cookable = loadedCookable;
 
                 // Update the RecyclerView with the new data
-                updateRecyclerView();
+                RecipeAdapter adapter = new RecipeAdapter(recipes, cookable);
+                recyclerView.setAdapter(adapter);
             }
 
             //Handle failure loading of recipes and update UI

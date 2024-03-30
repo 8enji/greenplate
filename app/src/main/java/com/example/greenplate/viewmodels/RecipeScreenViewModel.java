@@ -1,33 +1,23 @@
 package com.example.greenplate.viewmodels;
 
-import android.widget.Toast;
-
 import com.example.greenplate.model.FirebaseDB;
-import com.example.greenplate.strategy.SortingStrategies;
+import com.example.greenplate.model.SortingStrategies;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import java.time.format.DateTimeFormatter;
-import java.time.LocalDateTime;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import com.example.greenplate.model.Ingredient;
 import com.example.greenplate.model.Recipe;
-
-import org.w3c.dom.Document;
-import java.util.Collections;
-import java.util.Comparator;
 
 
 public class RecipeScreenViewModel extends ViewModel {

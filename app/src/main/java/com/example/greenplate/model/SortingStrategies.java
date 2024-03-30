@@ -1,4 +1,4 @@
-package com.example.greenplate.strategy;
+package com.example.greenplate.model;
 import com.example.greenplate.model.Recipe;
 
 import java.util.ArrayList;
