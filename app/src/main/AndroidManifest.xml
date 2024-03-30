@@ -48,6 +48,9 @@
         <activity
             android:name=".views.ShoppingList"
             android:exported="false" />
+        <activity
+            android:name=".views.RecipeDetailsScreen"
+            android:exported="false" />
     </application>
 
 </manifest>
