@@ -20,4 +20,13 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:text="Additional Text"/>
+
+    <Button
+        android:id="@+id/additionalButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="Additional Text"
+        android:visibility="gone"/>
 </LinearLayout>
