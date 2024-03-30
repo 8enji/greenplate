@@ -22,7 +22,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
-import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 import com.example.greenplate.model.Recipe;
 
@@ -34,7 +33,8 @@ public class RecipeScreen extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecipeScreenViewModel viewModel;
     private ArrayList<Ingredient> globalPantry;
-    private Spinner sortFilterSpinner;
+    private Button buttonSortByName;
+    private Button buttonFilterByCookable;
 
     private ArrayList<Recipe> recipes;
     private ArrayList<String> cookable;
@@ -50,11 +50,10 @@ public class RecipeScreen extends AppCompatActivity {
         recyclerView = findViewById(R.id.recipesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        sortFilterSpinner = findViewById(R.id.sortFilterSpinner);
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.sort_filter_options, android.R.layout.simple_spinner_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sortFilterSpinner.setAdapter(spinnerAdapter);
+        buttonSortByName = findViewById(R.id.buttonSortByName);
+        buttonFilterByCookable = findViewById(R.id.buttonFilterByCookable);
+        buttonSortByName.setOnClickListener(v -> sortRecipesByName());
+        buttonFilterByCookable.setOnClickListener(v -> filterByCookable());
 
         loadPantry();
 
@@ -91,31 +90,46 @@ public class RecipeScreen extends AppCompatActivity {
             }
         });
 
-        sortFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (recipes == null || cookable == null) return;
-
-                String selected = parent.getItemAtPosition(position).toString();
-                if ("Sort by Name".equals(selected)) {
-                    viewModel.sortRecipesByName(recipes);
-                } else if ("Sort by Availability".equals(selected)) {
-                    viewModel.sortRecipesByAvailability(recipes, cookable);
-                } else if ("Filter by Availability".equals(selected)) {
-                    recipes = viewModel.filterByAvailability(recipes, cookable);
-                }
-                updateRecyclerView();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+        buttonSortByName.setOnClickListener(v -> sortRecipesByName());
+        buttonFilterByCookable.setOnClickListener(v -> filterByCookable());
 
 
 
     }
 
+    private void sortRecipesByName() {
+        viewModel.sortRecipesByName(recipes, new RecipeScreenViewModel.LoadRecipesCallback() {
+            @Override
+            public void onSuccess(ArrayList<Recipe> sortedRecipes, ArrayList<String> sortedCookable) {
+                recipes = sortedRecipes; // Update the list with sorted recipes
+                updateRecyclerView(); // Update the RecyclerView to display the sorted list
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(RecipeScreen.this, "Error sorting recipes: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Method to be called when the "Filter by Cookable" button is pressed
+    private void filterByCookable() {
+        viewModel.filterByCookable(recipes, cookable, new RecipeScreenViewModel.LoadRecipesCallback() {
+            @Override
+            public void onSuccess(ArrayList<Recipe> filteredRecipes, ArrayList<String> filteredCookable) {
+                recipes = filteredRecipes; // Update the list with only cookable recipes
+                cookable = filteredCookable; // Update the cookable list
+                updateRecyclerView(); // Update the RecyclerView to display the filtered list
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(RecipeScreen.this, "Error filtering recipes: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Method to refresh the RecyclerView
     private void updateRecyclerView() {
         if (recipes != null && cookable != null) {
             RecipeAdapter adapter = new RecipeAdapter(recipes, cookable);
