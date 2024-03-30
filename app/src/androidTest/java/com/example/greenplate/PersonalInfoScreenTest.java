@@ -24,7 +24,7 @@ public class PersonalInfoScreenTest {
 
     /**
      * JUNIT TESTS
-     * NOTE: YOU CAN'T RUN BOTH TESTS AT THE SAME TIME, AS YOU NEED TO MAKE DIFFERENT ACCOUNTS.
+     * NOTE: YOU CAN'T RUN BOTH TESTS AT THE SAME TIME, AS YOU NEED TO MAKE DIFFERENT ACCOUNTS
      */
     @Test
     public void savePersonalInfo_VerifyDefaultValues() {
