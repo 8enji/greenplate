@@ -41,7 +41,6 @@ public class IngredientsFormScreen extends AppCompatActivity {
         buttonSave = findViewById(R.id.buttonSave);
 
 
-
         buttonSave.setOnClickListener(v -> {
             String ingredientName = editTextIngredientName.getText().toString();
             String quantity = editTextQuantity.getText().toString();

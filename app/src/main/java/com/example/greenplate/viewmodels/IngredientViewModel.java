@@ -24,6 +24,7 @@ public class IngredientViewModel extends ViewModel {
     private DocumentReference userRef;
     private FirebaseAuth mAuth;
 
+
     public IngredientViewModel() {
         db = FirebaseDB.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -31,6 +32,24 @@ public class IngredientViewModel extends ViewModel {
         String email = currentUser.getEmail();
         userRef = db.collection("users").document(email);
     }
+
+    public void getPantry(IngredientViewModel.GetPantryCallBack callback) {
+        ArrayList<Ingredient> pantry = new ArrayList<Ingredient>();
+        userRef.collection("pantry").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot ingredientDocuments = task.getResult();
+                for (DocumentSnapshot document : task.getResult()) {
+                    Map<String, Object> i = document.getData();
+                    Ingredient ingre = new Ingredient(i.get("name").toString(), (double) i.get("quantity"), i.get("units").toString(), (double) i.get("calories"));
+                    pantry.add(ingre);
+                }
+                callback.onSuccess(pantry);
+            } else {
+                callback.onFailure("Failed to access pantry: " + task.getException().getMessage());
+            }
+        }).addOnFailureListener(e -> System.out.println("Failed with exception: " + e.getMessage()));
+    }
+
 
     public void createIngredient(
             String ingredientName, String quantity,
@@ -91,6 +110,11 @@ public class IngredientViewModel extends ViewModel {
 
     public interface AuthCallback {
         void onSuccess();
+        void onFailure(String error);
+    }
+
+    public interface GetPantryCallBack {
+        void onSuccess(ArrayList<Ingredient> pantry);
         void onFailure(String error);
     }
 }
