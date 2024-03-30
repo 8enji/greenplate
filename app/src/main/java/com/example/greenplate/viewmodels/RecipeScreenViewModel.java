@@ -3,6 +3,7 @@ package com.example.greenplate.viewmodels;
 import android.widget.Toast;
 
 import com.example.greenplate.model.FirebaseDB;
+import com.example.greenplate.strategy.SortingStrategies;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import androidx.annotation.NonNull;
@@ -34,6 +35,8 @@ public class RecipeScreenViewModel extends ViewModel {
     private DocumentReference userRef;
     private FirebaseAuth mAuth;
     //private ArrayList<Ingredient> globalPantry;
+    private SortingStrategies.RecipeSortingStrategy sortingStrategy;
+    private SortingStrategies.RecipeFilteringStrategy filteringStrategy;
 
     public RecipeScreenViewModel() {
         db = FirebaseDB.getInstance();
@@ -169,6 +172,30 @@ public class RecipeScreenViewModel extends ViewModel {
                 });
     }
 
+    // Setter methods for sorting and filtering strategies
+    public void setSortingStrategy(SortingStrategies.RecipeSortingStrategy sortingStrategy) {
+        this.sortingStrategy = sortingStrategy;
+    }
+
+    public void setFilteringStrategy(SortingStrategies.RecipeFilteringStrategy filteringStrategy) {
+        this.filteringStrategy = filteringStrategy;
+    }
+
+    // Methods to sort and filter recipes using the current strategies
+    public void sortRecipes(ArrayList<Recipe> recipes) {
+        if (sortingStrategy != null) {
+            sortingStrategy.sort(recipes);
+        }
+    }
+
+    public ArrayList<Recipe> filterRecipes(ArrayList<Recipe> recipes, ArrayList<String> cookable) {
+        if (filteringStrategy != null) {
+            return filteringStrategy.filter(recipes, cookable);
+        }
+        return new ArrayList<>(); // Return an empty list if filtering strategy is not set
+    }
+
+
     public interface AuthCallback {
         void onSuccess();
         void onFailure(String error);
@@ -185,27 +212,27 @@ public class RecipeScreenViewModel extends ViewModel {
         void onFailure(String error);
     }
 
-    public void sortRecipesByName(ArrayList<Recipe> recipes, LoadRecipesCallback callback) {
-        if (recipes != null) {
-            Collections.sort(recipes, Comparator.comparing(Recipe::getName));
-            callback.onSuccess(recipes, null); // Assuming the callback handles a null 'cookable' list appropriately
-        } else {
-            callback.onFailure("Recipes list is null");
-        }
-    }
-
-    // Method to filter recipes by whether they are cookable
-    public void filterByCookable(ArrayList<Recipe> recipes, ArrayList<String> cookable, LoadRecipesCallback callback) {
-        ArrayList<Recipe> filteredRecipes = new ArrayList<>();
-        ArrayList<String> filteredCookable = new ArrayList<>();
-        for (int i = 0; i < recipes.size(); i++) {
-            if ("Yes".equals(cookable.get(i))) {
-                filteredRecipes.add(recipes.get(i));
-                filteredCookable.add(cookable.get(i));
-            }
-        }
-        callback.onSuccess(filteredRecipes, filteredCookable);
-    }
+//    public void sortRecipesByName(ArrayList<Recipe> recipes, LoadRecipesCallback callback) {
+//        if (recipes != null) {
+//            Collections.sort(recipes, Comparator.comparing(Recipe::getName));
+//            callback.onSuccess(recipes, null); // Assuming the callback handles a null 'cookable' list appropriately
+//        } else {
+//            callback.onFailure("Recipes list is null");
+//        }
+//    }
+//
+//    // Method to filter recipes by whether they are cookable
+//    public void filterByCookable(ArrayList<Recipe> recipes, ArrayList<String> cookable, LoadRecipesCallback callback) {
+//        ArrayList<Recipe> filteredRecipes = new ArrayList<>();
+//        ArrayList<String> filteredCookable = new ArrayList<>();
+//        for (int i = 0; i < recipes.size(); i++) {
+//            if ("Yes".equals(cookable.get(i))) {
+//                filteredRecipes.add(recipes.get(i));
+//                filteredCookable.add(cookable.get(i));
+//            }
+//        }
+//        callback.onSuccess(filteredRecipes, filteredCookable);
+//    }
 
 
 }

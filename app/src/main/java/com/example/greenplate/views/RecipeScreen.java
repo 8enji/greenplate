@@ -2,6 +2,7 @@ package com.example.greenplate.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.greenplate.model.Ingredient;
+import com.example.greenplate.strategy.SortingStrategies;
 import com.example.greenplate.viewmodels.RecipeScreenViewModel;
 import com.example.greenplate.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -56,16 +58,19 @@ public class RecipeScreen extends AppCompatActivity {
         buttonSortByName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sortRecipesByName();
+                viewModel.setSortingStrategy(new SortingStrategies.SortByNameStrategy());
+                sortRecipes();
             }
         });
 
         buttonFilterByCookable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filterByCookable();
+                viewModel.setFilteringStrategy(new SortingStrategies.FilterByCookableStrategy());
+                filterRecipes(); // Call the correct method here
             }
         });
+
 
 
         buttonAdd.setOnClickListener(v -> {
@@ -106,36 +111,23 @@ public class RecipeScreen extends AppCompatActivity {
 
     }
 
-    private void sortRecipesByName() {
-        viewModel.sortRecipesByName(recipes, new RecipeScreenViewModel.LoadRecipesCallback() {
-            @Override
-            public void onSuccess(ArrayList<Recipe> sortedRecipes, ArrayList<String> sortedCookable) {
-                recipes = sortedRecipes;
-                updateRecyclerView();
-            }
-
-            @Override
-            public void onFailure(String error) {
-                Toast.makeText(RecipeScreen.this, "Error sorting recipes: " + error, Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void sortRecipes() {
+        viewModel.sortRecipes(recipes);
+        updateRecyclerView();
     }
 
     // Method to be called when the "Filter by Cookable" button is pressed
-    private void filterByCookable() {
-        viewModel.filterByCookable(recipes, cookable, new RecipeScreenViewModel.LoadRecipesCallback() {
-            @Override
-            public void onSuccess(ArrayList<Recipe> filteredRecipes, ArrayList<String> filteredCookable) {
-                recipes = filteredRecipes;
-                cookable = filteredCookable;
-                updateRecyclerView();
-            }
+    private void filterRecipes() {
+        ArrayList<Recipe> filteredRecipes = viewModel.filterRecipes(recipes, cookable);
 
-            @Override
-            public void onFailure(String error) {
-                Toast.makeText(RecipeScreen.this, "Error filtering recipes: " + error, Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Update the UI with filtered recipes
+        RecipeAdapter adapter = new RecipeAdapter(filteredRecipes, cookable);
+        recyclerView.setAdapter(adapter);
+
+        // Notify the user if no recipes are found after filtering
+        if (filteredRecipes.isEmpty()) {
+            Toast.makeText(this, "No recipes found after filtering", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Method to refresh the RecyclerView
