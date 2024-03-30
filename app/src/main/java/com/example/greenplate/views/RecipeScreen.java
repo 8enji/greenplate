@@ -3,6 +3,8 @@ package com.example.greenplate.views;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,6 +22,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
+import android.widget.Spinner;
+import android.widget.ArrayAdapter;
 import com.example.greenplate.model.Recipe;
 
 public class RecipeScreen extends AppCompatActivity {
@@ -30,6 +34,10 @@ public class RecipeScreen extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecipeScreenViewModel viewModel;
     private ArrayList<Ingredient> globalPantry;
+    private Spinner sortFilterSpinner;
+
+    private ArrayList<Recipe> recipes;
+    private ArrayList<String> cookable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +49,13 @@ public class RecipeScreen extends AppCompatActivity {
         editTextRecipeName = findViewById(R.id.editTextRecipeName);
         recyclerView = findViewById(R.id.recipesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        sortFilterSpinner = findViewById(R.id.sortFilterSpinner);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this,
+                R.array.sort_filter_options, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortFilterSpinner.setAdapter(spinnerAdapter);
+
         loadPantry();
 
 
@@ -49,6 +64,7 @@ public class RecipeScreen extends AppCompatActivity {
             String recipeName = editTextRecipeName.getText().toString();
             String inputDetails = editTextInputDetails.getText().toString();
             createRecipe(recipeName, inputDetails);
+
         });
 
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomNavigation);
@@ -74,6 +90,37 @@ public class RecipeScreen extends AppCompatActivity {
                 return false;
             }
         });
+
+        sortFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (recipes == null || cookable == null) return;
+
+                String selected = parent.getItemAtPosition(position).toString();
+                if ("Sort by Name".equals(selected)) {
+                    viewModel.sortRecipesByName(recipes);
+                } else if ("Sort by Availability".equals(selected)) {
+                    viewModel.sortRecipesByAvailability(recipes, cookable);
+                } else if ("Filter by Availability".equals(selected)) {
+                    recipes = viewModel.filterByAvailability(recipes, cookable);
+                }
+                updateRecyclerView();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+
+
+    }
+
+    private void updateRecyclerView() {
+        if (recipes != null && cookable != null) {
+            RecipeAdapter adapter = new RecipeAdapter(recipes, cookable);
+            recyclerView.setAdapter(adapter);
+        }
     }
 
     private void loadPantry() {

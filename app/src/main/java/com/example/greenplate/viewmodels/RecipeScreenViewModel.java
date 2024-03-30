@@ -25,6 +25,10 @@ import com.example.greenplate.model.Ingredient;
 import com.example.greenplate.model.Recipe;
 
 import org.w3c.dom.Document;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RecipeScreenViewModel extends ViewModel {
     private FirebaseFirestore db;
@@ -181,6 +185,35 @@ public class RecipeScreenViewModel extends ViewModel {
         void onSuccess(ArrayList<Ingredient> pantry);
         void onFailure(String error);
     }
+
+    public void sortRecipesByName(ArrayList<Recipe> recipes) {
+        Collections.sort(recipes, Comparator.comparing(Recipe::getName));
+    }
+
+    public void sortRecipesByAvailability(ArrayList<Recipe> recipes, ArrayList<String> cookable) {
+        // Assuming recipes and cookable lists are aligned by index
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < cookable.size(); i++) {
+            if ("Yes".equals(cookable.get(i))) {
+                indices.add(i);
+            }
+        }
+        Collections.sort(indices, Comparator.comparing(recipes::get));
+        // Now, reorder recipes based on sorted indices
+        ArrayList<Recipe> sorted = new ArrayList<>();
+        for (int index : indices) {
+            sorted.add(recipes.get(index));
+        }
+        recipes.clear();
+        recipes.addAll(sorted);
+    }
+
+    public ArrayList<Recipe> filterByAvailability(ArrayList<Recipe> recipes, ArrayList<String> cookable) {
+        // Filter recipes where cookable is "Yes"
+        return recipes.stream().filter(recipe -> cookable.get(recipes.indexOf(recipe)).equals("Yes"))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
 
 
 }

@@ -98,15 +98,17 @@
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_below="@id/textViewNote2"
+        android:layout_marginTop="111dp"
         android:text="Available Recipes"
-        android:textStyle="bold"
-        android:textSize="25dp" />
+        android:textSize="25dp"
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="290dp"
         android:layout_below="@id/textViewAvailableRecipes"
+        android:layout_marginTop="1dp"
         android:scrollbars="vertical" />
 
 

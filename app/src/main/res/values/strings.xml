@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">GreenPlate</string>
+
+    <string-array name="sort_filter_options">
+        <item>Sort by Name</item>
+        <item>Sort by Availability</item>
+        <item>Filter by Availability</item>
+    </string-array>
+
 </resources>
