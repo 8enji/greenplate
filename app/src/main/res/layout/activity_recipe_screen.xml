@@ -117,7 +117,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="572dp"
-        android:text="Sort by Name" />
+        android:text="Sort by Name"
+        />
 
     <Button
         android:id="@+id/buttonFilterByCookable"
@@ -126,7 +127,8 @@
         android:layout_marginLeft="110dp"
         android:layout_below="@id/recipesRecyclerView"
         android:layout_toRightOf="@id/buttonSortByName"
-        android:text="Filter by Cookable" />
+        android:text="Filter by Cookable"
+        />
 
 
 </RelativeLayout>

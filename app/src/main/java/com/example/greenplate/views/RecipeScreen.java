@@ -52,11 +52,20 @@ public class RecipeScreen extends AppCompatActivity {
 
         buttonSortByName = findViewById(R.id.buttonSortByName);
         buttonFilterByCookable = findViewById(R.id.buttonFilterByCookable);
-        buttonSortByName.setOnClickListener(v -> sortRecipesByName());
-        buttonFilterByCookable.setOnClickListener(v -> filterByCookable());
 
-        loadPantry();
+        buttonSortByName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortRecipesByName();
+            }
+        });
 
+        buttonFilterByCookable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterByCookable();
+            }
+        });
 
 
         buttonAdd.setOnClickListener(v -> {
@@ -65,6 +74,8 @@ public class RecipeScreen extends AppCompatActivity {
             createRecipe(recipeName, inputDetails);
 
         });
+
+        loadPantry();
 
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomNavigation);
         bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -90,8 +101,6 @@ public class RecipeScreen extends AppCompatActivity {
             }
         });
 
-        buttonSortByName.setOnClickListener(v -> sortRecipesByName());
-        buttonFilterByCookable.setOnClickListener(v -> filterByCookable());
 
 
 
@@ -101,8 +110,8 @@ public class RecipeScreen extends AppCompatActivity {
         viewModel.sortRecipesByName(recipes, new RecipeScreenViewModel.LoadRecipesCallback() {
             @Override
             public void onSuccess(ArrayList<Recipe> sortedRecipes, ArrayList<String> sortedCookable) {
-                recipes = sortedRecipes; // Update the list with sorted recipes
-                updateRecyclerView(); // Update the RecyclerView to display the sorted list
+                recipes = sortedRecipes;
+                updateRecyclerView();
             }
 
             @Override
@@ -117,9 +126,9 @@ public class RecipeScreen extends AppCompatActivity {
         viewModel.filterByCookable(recipes, cookable, new RecipeScreenViewModel.LoadRecipesCallback() {
             @Override
             public void onSuccess(ArrayList<Recipe> filteredRecipes, ArrayList<String> filteredCookable) {
-                recipes = filteredRecipes; // Update the list with only cookable recipes
-                cookable = filteredCookable; // Update the cookable list
-                updateRecyclerView(); // Update the RecyclerView to display the filtered list
+                recipes = filteredRecipes;
+                cookable = filteredCookable;
+                updateRecyclerView();
             }
 
             @Override
@@ -131,10 +140,8 @@ public class RecipeScreen extends AppCompatActivity {
 
     // Method to refresh the RecyclerView
     private void updateRecyclerView() {
-        if (recipes != null && cookable != null) {
-            RecipeAdapter adapter = new RecipeAdapter(recipes, cookable);
-            recyclerView.setAdapter(adapter);
-        }
+        RecipeAdapter adapter = new RecipeAdapter(recipes, cookable);
+        recyclerView.setAdapter(adapter);
     }
 
     private void loadPantry() {
@@ -156,18 +163,35 @@ public class RecipeScreen extends AppCompatActivity {
     private void loadRecipes() {
         viewModel.loadRecipes(globalPantry, new RecipeScreenViewModel.LoadRecipesCallback() {
             //Handle successful loading of recipes and update UI
+//            @Override
+//            public void onSuccess(ArrayList<Recipe> recipes, ArrayList<String> cookable) {
+//                //handle setting recylcer view elements to all the recipes
+//                RecipeAdapter adapter = new RecipeAdapter(recipes, cookable);
+//                recyclerView.setAdapter(adapter);
+//            }
+//
+//            //Handle failure loading of recipes and update UI
+//            @Override
+//            public void onFailure(String error) {
+//                Toast.makeText(RecipeScreen.this,
+//                        "Failed to load recipes: " + error, Toast.LENGTH_SHORT).show();
+//            }
+//        });
+            //Handle successful loading of recipes and update UI
             @Override
-            public void onSuccess(ArrayList<Recipe> recipes, ArrayList<String> cookable) {
-                //handle setting recylcer view elements to all the recipes
-                RecipeAdapter adapter = new RecipeAdapter(recipes, cookable);
-                recyclerView.setAdapter(adapter);
+            public void onSuccess(ArrayList<Recipe> loadedRecipes, ArrayList<String> loadedCookable) {
+                // Update the member variables 'recipes' and 'cookable' with the loaded data
+                RecipeScreen.this.recipes = loadedRecipes;
+                RecipeScreen.this.cookable = loadedCookable;
+
+                // Update the RecyclerView with the new data
+                updateRecyclerView();
             }
 
             //Handle failure loading of recipes and update UI
             @Override
             public void onFailure(String error) {
-                Toast.makeText(RecipeScreen.this,
-                        "Failed to load recipes: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(RecipeScreen.this, "Failed to load recipes: " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }

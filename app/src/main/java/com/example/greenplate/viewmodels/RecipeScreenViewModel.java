@@ -186,8 +186,12 @@ public class RecipeScreenViewModel extends ViewModel {
     }
 
     public void sortRecipesByName(ArrayList<Recipe> recipes, LoadRecipesCallback callback) {
-        Collections.sort(recipes, Comparator.comparing(Recipe::getName));
-        callback.onSuccess(recipes, null); // Pass null for 'cookable' as it's not changed here
+        if (recipes != null) {
+            Collections.sort(recipes, Comparator.comparing(Recipe::getName));
+            callback.onSuccess(recipes, null); // Assuming the callback handles a null 'cookable' list appropriately
+        } else {
+            callback.onFailure("Recipes list is null");
+        }
     }
 
     // Method to filter recipes by whether they are cookable
