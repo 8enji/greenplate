@@ -21,7 +21,7 @@ public class Recipe {
         for (Ingredient recipeIngredient : ingredients) {
             boolean verified = false;
             for (Ingredient userIngredient : userPantry) {
-                if (recipeIngredient.getName().equals(getName())) {
+                if (recipeIngredient.getName().equals(userIngredient.getName())) {
                     if (userIngredient.getQuantity() >= recipeIngredient.getQuantity()) {
                         verified = true;
                     }
