@@ -28,6 +28,7 @@ public class IngredientsFormScreen extends AppCompatActivity {
     private BottomNavigationView bottomNavigation;
 
     private EditText editTextIngredientName, editTextQuantity, editTextCalories;
+    private EditText editTextExpiration;
     private Button buttonSave;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class IngredientsFormScreen extends AppCompatActivity {
         editTextIngredientName = findViewById(R.id.editTextIngredientName);
         editTextQuantity = findViewById(R.id.editTextQuantity);
         editTextCalories = findViewById(R.id.editTextCaloriesPerServing);
+        editTextExpiration = findViewById(R.id.editTextExpiration);
         buttonSave = findViewById(R.id.buttonSave);
 
 
@@ -45,7 +47,8 @@ public class IngredientsFormScreen extends AppCompatActivity {
             String ingredientName = editTextIngredientName.getText().toString();
             String quantity = editTextQuantity.getText().toString();
             String calories = editTextCalories.getText().toString();
-            createIngredient(ingredientName, quantity, calories);
+            String expirationDate = editTextExpiration.getText().toString();
+            createIngredient(ingredientName, quantity, calories, expirationDate);
         });
 
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomNavigation);
@@ -73,8 +76,8 @@ public class IngredientsFormScreen extends AppCompatActivity {
         });
     }
 
-    private void createIngredient(String ingredientName, String quantity, String calories) {
-        viewModel.createIngredient(ingredientName, quantity, calories, new IngredientViewModel.AuthCallback() {
+    private void createIngredient(String ingredientName, String quantity, String calories, String expirationdate) {
+        viewModel.createIngredient(ingredientName, quantity, calories, expirationdate, new IngredientViewModel.AuthCallback() {
             @Override
             public void onSuccess() {
                 Toast.makeText(IngredientsFormScreen.this,

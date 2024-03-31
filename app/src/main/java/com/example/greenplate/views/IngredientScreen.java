@@ -81,7 +81,7 @@ public class IngredientScreen extends AppCompatActivity {
             @Override
             public void onSuccess(ArrayList<Ingredient> pantry) {
                 globalPantry = pantry;
-                IngredientAdapter adapter = new IngredientAdapter(pantry);
+                IngredientAdapter adapter = new IngredientAdapter(pantry, viewModel);
                 recyclerViewIngredients.setAdapter(adapter);
             }
 

@@ -36,6 +36,7 @@ public class RecipeDetailsScreen extends AppCompatActivity {
     private BottomNavigationView bottomNavigation;
     private TextView recipeName;
     private Button buttonBack;
+    private IngredientViewModel viewModel2;
     private RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +93,7 @@ public class RecipeDetailsScreen extends AppCompatActivity {
             @Override
             public void onSuccess(ArrayList<Ingredient> ingredients) {
                 //handle setting recylcer view elements to all the recipes
-                IngredientAdapter adapter = new IngredientAdapter(ingredients);
+                IngredientAdapter adapter = new IngredientAdapter(ingredients, viewModel2);
                 recyclerView.setAdapter(adapter);
             }
 
