@@ -224,5 +224,36 @@ public class RecipeScreenViewModel extends ViewModel {
 //        callback.onSuccess(filteredRecipes, filteredCookable);
 //    }
 
+    public static String validateRecipeInput(String recipeName, String inputDetails) {
+        if (recipeName.isEmpty() || inputDetails.isEmpty()) {
+            return "Recipe Name and Ingredients List are required";
+        }
 
+        if (inputDetails.contains("-")) {
+            return "Quantities cannot be negative";
+        }
+
+        String[] ingredients = inputDetails.split(",");
+        for (String ingredientDetail : ingredients) {
+            String[] parts = ingredientDetail.trim().split(" ");
+            String unit = parts[parts.length - 1];
+            if (!(unit.equalsIgnoreCase("cup") || unit.equalsIgnoreCase("cups")
+                    || unit.equalsIgnoreCase("tbsp") || unit.equalsIgnoreCase("tbsps")
+                    || unit.equalsIgnoreCase("tsp") || unit.equalsIgnoreCase("tsps")
+                    || unit.equalsIgnoreCase("oz"))) {
+                return "Units must be of valid type";
+            }
+
+            try {
+                double quantity = Double.parseDouble(parts[parts.length - 2]);
+                if (quantity <= 0) {
+                    return "Quantity must be positive";
+                }
+            } catch (NumberFormatException e) {
+                return "Quantity must be a valid number";
+            }
+        }
+
+        return "Valid";
+    }
 }
