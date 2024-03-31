@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.greenplate.model.Ingredient;
 import com.example.greenplate.viewmodels.IngredientViewModel;
 
 import android.view.View;
@@ -49,6 +50,8 @@ public class IngredientsFormScreen extends AppCompatActivity {
             String calories = editTextCalories.getText().toString();
             String expirationDate = editTextExpiration.getText().toString();
             createIngredient(ingredientName, quantity, calories, expirationDate);
+            Intent intent = new Intent(IngredientsFormScreen.this, HomeScreen.class);
+            startActivity(intent);
         });
 
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomNavigation);
@@ -82,7 +85,6 @@ public class IngredientsFormScreen extends AppCompatActivity {
             public void onSuccess() {
                 Toast.makeText(IngredientsFormScreen.this,
                         "Ingredient added", Toast.LENGTH_SHORT).show();
-                finish();
             }
             @Override
             public void onFailure(String error) {
@@ -91,5 +93,4 @@ public class IngredientsFormScreen extends AppCompatActivity {
             }
         });
     }
-
 }

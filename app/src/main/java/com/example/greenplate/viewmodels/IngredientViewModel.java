@@ -79,6 +79,10 @@ public class IngredientViewModel extends ViewModel {
                 return;
             }
             String unit = parts[1];
+            if (unit.isEmpty()) {
+                callback.onFailure(("Please enter a unit"));
+                return;
+            }
 
             userRef.collection("pantry").whereEqualTo("name", ingredientName).get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
