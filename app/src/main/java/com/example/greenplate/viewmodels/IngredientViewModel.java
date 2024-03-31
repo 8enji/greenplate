@@ -167,20 +167,8 @@ public class IngredientViewModel extends ViewModel {
                         callback.onIngredientUpdated(false, "Failed to check if ingredient exists: "
                                 + e.getMessage()));
     }
-    public interface AuthCallback {
-        void onSuccess();
-        void onFailure(String error);
-    }
 
-    public interface GetPantryCallBack {
-        void onSuccess(ArrayList<Ingredient> pantry);
-        void onFailure(String error);
-    }
-
-    public interface IngredientUpdateCallback {
-        void onIngredientUpdated(boolean success, String message);
-
-      public static String validateIngredientInput(String ingredientName, String quantity, String calories) {
+    public static String validateIngredientInput(String ingredientName, String quantity, String calories) {
         if (ingredientName.isEmpty() || calories.isEmpty() || quantity.isEmpty()) {
             return "Ingredient Name, Quantity, and Calories are required";
         }
@@ -201,5 +189,20 @@ public class IngredientViewModel extends ViewModel {
         } catch (NumberFormatException e) {
             return "Calories must be a valid number";
         }
+    }
+
+    public interface AuthCallback {
+        void onSuccess();
+        void onFailure(String error);
+    }
+
+    public interface GetPantryCallBack {
+        void onSuccess(ArrayList<Ingredient> pantry);
+        void onFailure(String error);
+    }
+
+    public interface IngredientUpdateCallback {
+        void onIngredientUpdated(boolean success, String message);
+
     }
 }
