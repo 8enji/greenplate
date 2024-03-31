@@ -93,7 +93,7 @@ public class RecipeDetailsScreen extends AppCompatActivity {
             @Override
             public void onSuccess(ArrayList<Ingredient> ingredients) {
                 //handle setting recylcer view elements to all the recipes
-                IngredientAdapter adapter = new IngredientAdapter(ingredients, viewModel2);
+                RecipeIngredientAdapter adapter = new RecipeIngredientAdapter(ingredients, viewModel2);
                 recyclerView.setAdapter(adapter);
             }
 
