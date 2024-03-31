@@ -7,6 +7,8 @@ import java.util.Comparator;
 
 public class SortingStrategies {
 
+    //Used to Implement Strategy Pattern
+
     public interface RecipeSortingStrategy {
         void sort(ArrayList<Recipe> recipes);
     }
