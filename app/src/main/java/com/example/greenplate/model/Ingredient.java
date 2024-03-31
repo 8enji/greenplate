@@ -5,12 +5,23 @@ public class Ingredient {
     private double quantity;
     private String units;
     private double calories;
+    private String expirationDate;
 
     public Ingredient(String name, double quantity, String units, double calories) {
         this.name = name;
         this.quantity = quantity;
         this.units = units;
         this.calories = calories;
+        this.expirationDate = "";
+    }
+
+    public Ingredient(String name, double quantity,
+                      String units, double calories, String expirationDate) {
+        this.name = name;
+        this.quantity = quantity;
+        this.units = units;
+        this.calories = calories;
+        this.expirationDate = expirationDate;
     }
 
     public double getCalories() { return calories;}
@@ -23,6 +34,7 @@ public class Ingredient {
     public String getUnits() {
         return units;
     }
+    public void setQuantity(double quantity) { this.quantity = quantity;}
 
 
 }

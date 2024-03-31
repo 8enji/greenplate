@@ -53,7 +53,7 @@ public class IngredientViewModel extends ViewModel {
 
     public void createIngredient(
             String ingredientName, String quantity,
-            String calories, AuthCallback callback) {
+            String calories, String expirationdate, AuthCallback callback) {
 
         if (ingredientName.isEmpty() || calories.isEmpty() || quantity.isEmpty()) {
             //null checking
@@ -79,6 +79,10 @@ public class IngredientViewModel extends ViewModel {
                 return;
             }
             String unit = parts[1];
+            if (unit.isEmpty()) {
+                callback.onFailure(("Please enter a unit"));
+                return;
+            }
 
             userRef.collection("pantry").whereEqualTo("name", ingredientName).get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -87,17 +91,30 @@ public class IngredientViewModel extends ViewModel {
                             callback.onFailure("Ingredient already exists in the pantry");
                         } else {
                             // Ingredient does not exist, proceed to add
-                            Ingredient ingredient = new Ingredient(ingredientName, quantityDouble, unit, caloriesDouble);
-                            Map<String, Object> ingredientMap = new HashMap<>();
-                            ingredientMap.put("name", ingredientName);
-                            ingredientMap.put("quantity", quantityDouble);
-                            ingredientMap.put("units", unit);
-                            ingredientMap.put("calories", caloriesDouble);
-
-                            userRef.collection("pantry").document(ingredient.getName())
-                                    .set(ingredientMap)
-                                    .addOnSuccessListener(documentReference -> callback.onSuccess())
-                                    .addOnFailureListener(e -> callback.onFailure("Failed to add ingredient: " + e.getMessage()));
+                            if (expirationdate.isEmpty()) {
+                                Ingredient ingredient = new Ingredient(ingredientName, quantityDouble, unit, caloriesDouble);
+                                Map<String, Object> ingredientMap = new HashMap<>();
+                                ingredientMap.put("name", ingredientName);
+                                ingredientMap.put("quantity", quantityDouble);
+                                ingredientMap.put("units", unit);
+                                ingredientMap.put("calories", caloriesDouble);
+                                userRef.collection("pantry").document(ingredient.getName())
+                                        .set(ingredientMap)
+                                        .addOnSuccessListener(documentReference -> callback.onSuccess())
+                                        .addOnFailureListener(e -> callback.onFailure("Failed to add ingredient: " + e.getMessage()));
+                            } else {
+                                Ingredient ingredient = new Ingredient(ingredientName, quantityDouble, unit, caloriesDouble, expirationdate);
+                                Map<String, Object> ingredientMap = new HashMap<>();
+                                ingredientMap.put("name", ingredientName);
+                                ingredientMap.put("quantity", quantityDouble);
+                                ingredientMap.put("units", unit);
+                                ingredientMap.put("calories", caloriesDouble);
+                                ingredientMap.put("expiration date", expirationdate);
+                                userRef.collection("pantry").document(ingredient.getName())
+                                        .set(ingredientMap)
+                                        .addOnSuccessListener(documentReference -> callback.onSuccess())
+                                        .addOnFailureListener(e -> callback.onFailure("Failed to add ingredient: " + e.getMessage()));
+                            }
                         }
                     })
                     .addOnFailureListener(e -> callback.onFailure("Failed to check if ingredient exists: " + e.getMessage()));
@@ -108,6 +125,48 @@ public class IngredientViewModel extends ViewModel {
         }
     }
 
+    public void increaseIngredientQuantity(Ingredient ingredient, IngredientUpdateCallback callback) {
+        double newQuantity = ingredient.getQuantity() + 1.0;
+        updateIngredientQuantity(ingredient, newQuantity, callback);
+    }
+
+    public void decreaseIngredientQuantity(Ingredient ingredient, IngredientUpdateCallback callback) {
+        double newQuantity = Math.max(0, ingredient.getQuantity() - 1.0);
+        updateIngredientQuantity(ingredient, newQuantity, callback);
+    }
+
+    private void updateIngredientQuantity(Ingredient ingredient, double newQuantity, IngredientUpdateCallback callback) {
+        if (newQuantity <= 0) {
+            // Remove the ingredient if its quantity becomes 0 or less
+            removeIngredient(ingredient, callback);
+        } else {
+            // Update the ingredient quantity in the database
+            Map<String, Object> updateData = new HashMap<>();
+            updateData.put("quantity", newQuantity);
+            userRef.collection("pantry").document(ingredient.getName())
+                    .update(updateData)
+                    .addOnSuccessListener(aVoid -> {
+                        // Successfully updated quantity
+                        callback.onIngredientUpdated(true, "Successful update");
+                    })
+                    .addOnFailureListener(e -> {
+                        // Failed to update quantity
+                        callback.onIngredientUpdated(false, "Failed to update quantity");
+                    });
+        }
+    }
+
+    private void removeIngredient(Ingredient ingredient, IngredientUpdateCallback callback) {
+        userRef.collection("pantry").document(ingredient.getName())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    // Successfully removed ingredient
+                    callback.onIngredientUpdated(true, "Successful removal");
+                })
+                .addOnFailureListener(e ->
+                        callback.onIngredientUpdated(false, "Failed to check if ingredient exists: "
+                                + e.getMessage()));
+    }
     public interface AuthCallback {
         void onSuccess();
         void onFailure(String error);
@@ -118,7 +177,10 @@ public class IngredientViewModel extends ViewModel {
         void onFailure(String error);
     }
 
-    public static String validateIngredientInput(String ingredientName, String quantity, String calories) {
+    public interface IngredientUpdateCallback {
+        void onIngredientUpdated(boolean success, String message);
+
+      public static String validateIngredientInput(String ingredientName, String quantity, String calories) {
         if (ingredientName.isEmpty() || calories.isEmpty() || quantity.isEmpty()) {
             return "Ingredient Name, Quantity, and Calories are required";
         }
