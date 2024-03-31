@@ -179,5 +179,27 @@ public class IngredientViewModel extends ViewModel {
 
     public interface IngredientUpdateCallback {
         void onIngredientUpdated(boolean success, String message);
+
+      public static String validateIngredientInput(String ingredientName, String quantity, String calories) {
+        if (ingredientName.isEmpty() || calories.isEmpty() || quantity.isEmpty()) {
+            return "Ingredient Name, Quantity, and Calories are required";
+        }
+        if (calories.contains(" ")) {
+            return "Calories cannot contain whitespace";
+        }
+        if (calories.contains("-")) {
+            return "Calories cannot be negative";
+        }
+        try {
+            double caloriesDouble = Double.parseDouble(calories);
+            String[] parts = quantity.split(" ");
+            double quantityDouble = Double.parseDouble(parts[0]);
+            if (quantityDouble < 0) {
+                return "Quantity cannot be negative";
+            }
+            return null;
+        } catch (NumberFormatException e) {
+            return "Calories must be a valid number";
+        }
     }
 }
