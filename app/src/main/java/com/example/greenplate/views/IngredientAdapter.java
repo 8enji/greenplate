@@ -40,7 +40,10 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
                 viewModel.increaseIngredientQuantity(ingredient, new IngredientViewModel.IngredientUpdateCallback() {
                     @Override
                     public void onIngredientUpdated(boolean success, String error) {
-                        notifyDataSetChanged(); // Update the RecyclerView when the quantity changes
+                        if (success) {
+                        ingredient.setQuantity(ingredient.getQuantity() + 1.0);
+                        notifyItemChanged(position);
+                        }
                     }
                 });
             }
@@ -51,7 +54,10 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
                 viewModel.decreaseIngredientQuantity(ingredient, new IngredientViewModel.IngredientUpdateCallback() {
                     @Override
                     public void onIngredientUpdated(boolean success, String error) {
-                        notifyDataSetChanged(); // Update the RecyclerView when the quantity changes
+                        if (success) {
+                            ingredient.setQuantity(Math.max(0, ingredient.getQuantity() - 1.0));
+                            notifyItemChanged(position);
+                        }
                     }
                 });
             }

@@ -34,6 +34,7 @@ public class Ingredient {
     public String getUnits() {
         return units;
     }
+    public void setQuantity(double quantity) { this.quantity = quantity;}
 
 
 }

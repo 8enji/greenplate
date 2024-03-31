@@ -143,7 +143,7 @@ public class IngredientViewModel extends ViewModel {
                     .update(updateData)
                     .addOnSuccessListener(aVoid -> {
                         // Successfully updated quantity
-                        callback.onIngredientUpdated(true, "Sucessful update");
+                        callback.onIngredientUpdated(true, "Successful update");
                     })
                     .addOnFailureListener(e -> {
                         // Failed to update quantity
@@ -157,7 +157,7 @@ public class IngredientViewModel extends ViewModel {
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     // Successfully removed ingredient
-                    callback.onIngredientUpdated(true, "Sucessful removal");
+                    callback.onIngredientUpdated(true, "Successful removal");
                 })
                 .addOnFailureListener(e ->
                         callback.onIngredientUpdated(false, "Failed to check if ingredient exists: "
