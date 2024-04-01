@@ -10,6 +10,7 @@ import com.example.greenplate.viewmodels.RecipeScreenViewModel;
 
 import java.util.ArrayList;
 
+// Sprint 3 Unit Tests
 public class Sprint3Test {
     @Test
     public void testCanCook_EnoughIngredients() {
