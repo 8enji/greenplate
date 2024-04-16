@@ -23,8 +23,7 @@ public class ShoppingListViewModel {
         userRef = db.collection("users").document(email);
     }
 
-    public void addIngredient(String ingredientName, String quantity, IngredientUpdateCallback callback) {
-
+    public void addIngredient(String ingredientName, String quantity, String calories, IngredientUpdateCallback callback) {
         if (ingredientName.isEmpty() || quantity.isEmpty()) {
             //null checking
             callback.onFailure("Ingredient Name, Quantity, and Units are required");
@@ -42,7 +41,8 @@ public class ShoppingListViewModel {
             callback.onFailure(("Please enter a unit"));
             return;
         }
-        Ingredient ingredient = new Ingredient(ingredientName, quantityDouble, unit, 0, "");
+        double caloriesDouble = Double.parseDouble(calories);
+        Ingredient ingredient = new Ingredient(ingredientName, quantityDouble, unit, caloriesDouble, "");
 
         userRef.collection("list").whereEqualTo("name", ingredientName).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -55,20 +55,104 @@ public class ShoppingListViewModel {
                         ingredientMap.put("name", ingredientName);
                         ingredientMap.put("quantity", quantityDouble);
                         ingredientMap.put("units", unit);
-                        ingredientMap.put("calories", 0);
+                        ingredientMap.put("calories", caloriesDouble);
                         userRef.collection("list").document(ingredientName)
                                 .set(ingredientMap)
                                 .addOnSuccessListener(documentReference -> callback.onSuccess())
                                 .addOnFailureListener(e -> callback.onFailure("Failed to add ingredient: " + e.getMessage()));
-
                     }
                 })
                 .addOnFailureListener(e -> callback.onFailure("Failed to check if ingredient exists: " + e.getMessage()));
 
     }
 
-    public void buyIngredient() {
+    public void buyIngredient(String ingredientName, String quantity, String calories, IngredientUpdateCallback callback) {
+        userRef.collection("list").document(ingredientName)
+            .delete()
+            .addOnSuccessListener(aVoid -> {
+                // Successfully bought ingredient
+                // Add to pantry
+                createIngredient(ingredientName, quantity, calories, "", callback);
+                callback.onSuccess();
+            })
+            .addOnFailureListener(e -> {
+                // Failed to update quantity
+                callback.onFailure("Failed to buy ingredient");
+            });
+    }
 
+    public void createIngredient(
+            String ingredientName, String quantity,
+            String calories, String expirationdate, IngredientUpdateCallback callback) {
+
+        if (ingredientName.isEmpty() || calories.isEmpty() || quantity.isEmpty()) {
+            //null checking
+            callback.onFailure("Ingredient Name, Quantity, Units, and Calories are required");
+            return;
+        }
+        if (calories.contains(" ")) {
+            //calories will not parse to an int
+            callback.onFailure("Calories cannot contain whitespace");
+            return;
+        }
+        if (calories.contains("-")) {
+            //calories cannot be negative
+            callback.onFailure("Calories cannot be negative");
+            return;
+        }
+        try {
+            double caloriesDouble = Double.parseDouble(calories);
+            String[] parts = quantity.split(" ");
+            double quantityDouble = Double.parseDouble(parts[0]);
+            if (quantityDouble < 0) {
+                callback.onFailure("Quantity cannot be negative");
+                return;
+            }
+            String unit = parts[1];
+            if (unit.isEmpty()) {
+                callback.onFailure(("Please enter a unit"));
+                return;
+            }
+
+            userRef.collection("pantry").whereEqualTo("name", ingredientName).get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            // Ingredient already exists
+                            callback.onFailure("Ingredient already exists in the pantry");
+                        } else {
+                            // Ingredient does not exist, proceed to add
+                            if (expirationdate.isEmpty()) {
+                                Ingredient ingredient = new Ingredient(ingredientName, quantityDouble, unit, caloriesDouble);
+                                Map<String, Object> ingredientMap = new HashMap<>();
+                                ingredientMap.put("name", ingredientName);
+                                ingredientMap.put("quantity", quantityDouble);
+                                ingredientMap.put("units", unit);
+                                ingredientMap.put("calories", caloriesDouble);
+                                userRef.collection("pantry").document(ingredient.getName())
+                                        .set(ingredientMap)
+                                        .addOnSuccessListener(documentReference -> callback.onSuccess())
+                                        .addOnFailureListener(e -> callback.onFailure("Failed to add ingredient: " + e.getMessage()));
+                            } else {
+                                Ingredient ingredient = new Ingredient(ingredientName, quantityDouble, unit, caloriesDouble, expirationdate);
+                                Map<String, Object> ingredientMap = new HashMap<>();
+                                ingredientMap.put("name", ingredientName);
+                                ingredientMap.put("quantity", quantityDouble);
+                                ingredientMap.put("units", unit);
+                                ingredientMap.put("calories", caloriesDouble);
+                                ingredientMap.put("expiration date", expirationdate);
+                                userRef.collection("pantry").document(ingredient.getName())
+                                        .set(ingredientMap)
+                                        .addOnSuccessListener(documentReference -> callback.onSuccess())
+                                        .addOnFailureListener(e -> callback.onFailure("Failed to add ingredient: " + e.getMessage()));
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> callback.onFailure("Failed to check if ingredient exists: " + e.getMessage()));
+
+        } catch (NumberFormatException e) {
+            // Parse Fails
+            callback.onFailure("Calories must be a valid number");
+        }
     }
 
     private void updateIngredientQuantity(Ingredient ingredient, Double newQuantity, IngredientUpdateCallback callback) {
