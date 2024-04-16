@@ -30,7 +30,6 @@ public class ShoppingListViewModel {
             callback.onFailure("Ingredient Name, Quantity, and Units are required");
             return;
         }
-
         String[] parts = quantity.split(" ");
         double quantityDouble = Double.parseDouble(parts[0]);
         if (quantityDouble < 0) {
