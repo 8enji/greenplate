@@ -24,6 +24,14 @@
         android:text="Back"
         android:layout_above="@id/bottomNavigation" />
 
+    <Button
+        android:id="@+id/buttonCook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cook"
+        android:layout_above="@id/bottomNavigation"
+        android:layout_alignParentRight="true" />
+
     <TextView
         android:id="@+id/textViewRecipeName"
         android:layout_width="wrap_content"

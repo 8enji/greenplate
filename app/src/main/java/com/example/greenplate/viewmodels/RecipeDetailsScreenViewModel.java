@@ -30,7 +30,6 @@ public class RecipeDetailsScreenViewModel extends ViewModel {
     private FirebaseFirestore db;
     private DocumentReference userRef;
     private FirebaseAuth mAuth;
-    //private ArrayList<Ingredient> globalPantry;
 
     public RecipeDetailsScreenViewModel() {
         db = FirebaseDB.getInstance();
@@ -48,7 +47,7 @@ public class RecipeDetailsScreenViewModel extends ViewModel {
                 ArrayList<HashMap<String, Object>> rI = (ArrayList<HashMap<String, Object>>) r.get("ingredients");
                 ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
                 for (int i = 0; i < rI.size(); i++) {
-                    Ingredient ingr = new Ingredient(rI.get(i).get("name").toString(), (double) rI.get(i).get("quantity"), rI.get(i).get("units").toString(), 0);
+                    Ingredient ingr = new Ingredient(rI.get(i).get("name").toString(), (double) rI.get(i).get("quantity"), rI.get(i).get("units").toString(), (double) rI.get(i).get("calories"));
                     ingredients.add(ingr);
                 }
                 callback.onSuccess(ingredients);
@@ -59,11 +58,75 @@ public class RecipeDetailsScreenViewModel extends ViewModel {
         });
     }
 
+    public void getPantry(GetPantryCallBack callback) {
+        //get the pantry:
+        HashMap<String, Ingredient> pantry = new HashMap<String, Ingredient>();
+        userRef.collection("pantry").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot ingredientDocuments = task.getResult();
+                for (DocumentSnapshot document : task.getResult()) {
+                    Map<String, Object> i = document.getData();
+                    Ingredient ingre = new Ingredient(i.get("name").toString(), (double) i.get("quantity"), i.get("units").toString(), (double) i.get("calories"));
+                    pantry.put(ingre.getName(), ingre);
+                }
+                callback.onSuccess(pantry);
+            } else {
+                callback.onFailure("Failed to access pantry: " + task.getException().getMessage());
+            }
+        }).addOnFailureListener(e -> System.out.println("Failed with exception: " + e.getMessage()));
+    }
+
+    public void removeIngredients(HashMap<String, Ingredient> pantry, ArrayList<Ingredient> ingredients, PantryCallback callback) {
+
+        //for each ingredient that we are cooking:
+        int totalCalories = 0;
+        for (Ingredient i: ingredients) {
+            totalCalories += (double) pantry.get(i.getName()).getCalories();
+            double newQuantity = Math.max(0, pantry.get(i.getName()).getQuantity() - i.getQuantity());
+            if (newQuantity <= 0) {
+                // Remove the ingredient if its quantity becomes 0 or less
+                userRef.collection("pantry").document(i.getName())
+                        .delete()
+                        .addOnSuccessListener(aVoid -> {
+                            // Successfully removed ingredient
+                        })
+                        .addOnFailureListener(e -> {
+                                callback.onFailure("Failed to remove an ingredient: "
+                                        + e.getMessage());
+                        });
+            } else {
+                // Update the ingredient quantity in the database
+                Map<String, Object> updateData = new HashMap<>();
+                updateData.put("quantity", newQuantity);
+                userRef.collection("pantry").document(i.getName())
+                        .update(updateData)
+                        .addOnSuccessListener(aVoid -> {
+                            // Successfully updated quantity
+                        })
+                        .addOnFailureListener(e -> {
+                            // Failed to update quantity
+                            callback.onFailure("Failed to update ingredient quantity: " + e.getMessage());
+                        });
+            }
+        }
+        callback.onSuccess(totalCalories);
+    }
+
+
+
     public interface LoadRecipeCallback {
         void onSuccess(ArrayList<Ingredient> ingredients);
         void onFailure(String error);
     }
 
+    public interface PantryCallback {
+        void onSuccess(int totalCalories);
+        void onFailure(String error);
+    }
 
+    public interface GetPantryCallBack {
+        void onSuccess(HashMap<String, Ingredient> pantry);
+        void onFailure(String error);
+    }
 
 }
