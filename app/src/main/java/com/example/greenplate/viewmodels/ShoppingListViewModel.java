@@ -153,6 +153,15 @@ public class ShoppingListViewModel {
             callback.onFailure("Calories must be a valid number");
         }
     }
+    public void increaseIngredientQuantity(Ingredient ingredient, IngredientUpdateCallback callback) {
+        double newQuantity = ingredient.getQuantity() + 1.0;
+        updateIngredientQuantity(ingredient, newQuantity, callback);
+    }
+
+    public void decreaseIngredientQuantity(Ingredient ingredient, IngredientUpdateCallback callback) {
+        double newQuantity = Math.max(0, ingredient.getQuantity() - 1.0);
+        updateIngredientQuantity(ingredient, newQuantity, callback);
+    }
 
     private void updateIngredientQuantity(Ingredient ingredient, Double newQuantity, IngredientUpdateCallback callback) {
         if (newQuantity <= 0) {
@@ -176,8 +185,16 @@ public class ShoppingListViewModel {
     }
 
     private void removeIngredient(Ingredient ingredient, IngredientUpdateCallback callback) {
-
+        userRef.collection("list").document(ingredient.getName())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    // Successfully removed ingredient
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(e ->
+                        callback.onFailure("Failed to remove ingredient: " + e.getMessage()));
     }
+
 
     public interface addIngredientCallback {
         void onSuccess();
