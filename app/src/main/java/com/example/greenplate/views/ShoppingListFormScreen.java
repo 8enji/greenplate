@@ -79,7 +79,13 @@ public class ShoppingListFormScreen extends AppCompatActivity {
         viewModel.addIngredient(ingredientName, quantity, calories, new ShoppingListViewModel.IngredientUpdateCallback() {
             @Override
             public void onIngredientUpdated(boolean success, String error) {
-                return;
+                if (success) {
+                    Toast.makeText(ShoppingListFormScreen.this,
+                            "Added Ingredient Successfully: " + error, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ShoppingListFormScreen.this,
+                            "Failed to add ingredient: " + error, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
