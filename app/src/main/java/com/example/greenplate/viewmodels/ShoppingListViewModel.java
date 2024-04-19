@@ -8,6 +8,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ShoppingListViewModel {
@@ -194,6 +195,12 @@ public class ShoppingListViewModel {
                 })
                 .addOnFailureListener(e ->
                         callback.onFailure("Failed to remove ingredient: " + e.getMessage()));
+    }
+
+    public void buySelectedIngredients(List<Ingredient> ingredients, IngredientUpdateCallback callback) {
+        for (Ingredient ingredient : ingredients) {
+            buyIngredient(ingredient.getName(), String.valueOf(ingredient.getQuantity()), String.valueOf(ingredient.getCalories()), callback);
+        }
     }
 
 
