@@ -6,27 +6,26 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/nameTextView"
+        android:id="@+id/ingredientSNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="20sp"
-        android:textStyle="bold"/>
+        android:paddingVertical="10sp"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <Button
-        android:id="@+id/additionalButton2"
+        android:id="@+id/buttonIncrease2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="Additional Text"/>
+        android:layout_below="@id/ingredientSNameTextView"
+        android:text="+"/>
 
     <Button
-        android:id="@+id/additionalButton"
+        android:id="@+id/buttonDecrease2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="Additional Text"
-        android:visibility="gone"/>
+        android:layout_below="@id/ingredientSNameTextView"
+        android:layout_toEndOf="@id/buttonIncrease2"
+        android:text="-"/>
 </LinearLayout>
