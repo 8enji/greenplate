@@ -57,7 +57,7 @@ public class RecipeScreenViewModel extends ViewModel {
                     if (r.canCook(globalPantry)) {
                         cookable.add("Yes");
                     } else {
-                        cookable.add("No");
+                        cookable.add("Add");
                     }
                 }
                 callback.onSuccess(recipes, cookable);

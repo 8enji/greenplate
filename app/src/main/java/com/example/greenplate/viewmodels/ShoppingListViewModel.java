@@ -1,16 +1,22 @@
 package com.example.greenplate.viewmodels;
 
+import androidx.lifecycle.ViewModel;
+
 import com.example.greenplate.model.FirebaseDB;
 import com.example.greenplate.model.Ingredient;
+import com.example.greenplate.model.Recipe;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ShoppingListViewModel {
+public class ShoppingListViewModel extends ViewModel {
     private FirebaseFirestore db;
     private DocumentReference userRef;
     private FirebaseAuth mAuth;
@@ -196,6 +202,27 @@ public class ShoppingListViewModel {
                         callback.onFailure("Failed to remove ingredient: " + e.getMessage()));
     }
 
+    public void getPantry(String recipeName, GetPantryCallBack callback) {
+        ArrayList<Ingredient> pantry = new ArrayList<Ingredient>();
+        userRef.collection("pantry").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot ingredientDocuments = task.getResult();
+                for (DocumentSnapshot document : task.getResult()) {
+                    Map<String, Object> i = document.getData();
+                    Ingredient ingre = new Ingredient(i.get("name").toString(), (double) i.get("quantity"), i.get("units").toString(), (double) i.get("calories"));
+                    pantry.add(ingre);
+                }
+                callback.onSuccess(pantry);
+            } else {
+                callback.onFailure("Failed to access pantry: " + task.getException().getMessage());
+            }
+        }).addOnFailureListener(e -> System.out.println("Failed with exception: " + e.getMessage()));
+    }
+
+    public void addIngredientsRecipe(ArrayList<Ingredient> pantry, ArrayList<Recipe> recipes, int recipePosition, AddCallback callback) {
+        //Implement this function
+    }
+
 
     public interface addIngredientCallback {
         void onSuccess();
@@ -204,6 +231,21 @@ public class ShoppingListViewModel {
 
     public interface IngredientUpdateCallback {
         void onSuccess();
+        void onFailure(String error);
+    }
+
+    public interface RecipeCallback {
+        void onSuccess();
+        void onFailure(String error);
+    }
+
+    public interface AddCallback {
+        void onSuccess();
+        void onFailure(String error);
+    }
+
+    public interface GetPantryCallBack {
+        void onSuccess(ArrayList<Ingredient> pantry);
         void onFailure(String error);
     }
 }

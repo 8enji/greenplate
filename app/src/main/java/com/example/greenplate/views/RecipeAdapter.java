@@ -6,15 +6,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.greenplate.R;
 import java.util.ArrayList;
 
+import com.example.greenplate.model.Ingredient;
 import com.example.greenplate.model.Recipe;
+import com.example.greenplate.viewmodels.InputMealViewModel;
+import com.example.greenplate.viewmodels.RecipeDetailsScreenViewModel;
+import com.example.greenplate.viewmodels.RecipeScreenViewModel;
+import com.example.greenplate.viewmodels.ShoppingListViewModel;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
     private ArrayList<Recipe> recipes;
     private ArrayList<String> cookable;
+    private ShoppingListViewModel viewModel;
 
     public RecipeAdapter(ArrayList<Recipe> recipes, ArrayList<String> cookable) {
         this.recipes = recipes;
@@ -23,6 +33,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        viewModel = new ViewModelProvider((ViewModelStoreOwner) parent.getContext()).get(ShoppingListViewModel.class);
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recipe_item, parent, false);
         return new ViewHolder(view);
@@ -34,24 +45,54 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         String canCook = cookable.get(position);
         holder.nameTextView.setText(recipe.getName());
         holder.additionalButton.setText(canCook);
-        holder.additionalTextView.setText(canCook);
+        holder.additionalButton2.setText(canCook);
         if (canCook.equals("Yes")) {
-            holder.additionalTextView.setVisibility(View.GONE);
+            holder.additionalButton2.setVisibility(View.GONE);
             holder.additionalButton.setVisibility(View.VISIBLE);
             holder.additionalButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Handle button click event
-                    // You can use 'position' here to know which item was clicked, if needed
                     Intent intent = new Intent(v.getContext(), RecipeDetailsScreen.class);
                     intent.putExtra("RECIPE_NAME", recipes.get(position).getName());
                     v.getContext().startActivity(intent);
                 }
             });
         } else {
-            holder.additionalTextView.setVisibility(View.VISIBLE);
+            holder.additionalButton2.setVisibility(View.VISIBLE);
             holder.additionalButton.setVisibility(View.GONE);
+            holder.additionalButton2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Handle button click event
+                    viewModel.getPantry(recipes.get(position).getName(), new ShoppingListViewModel.GetPantryCallBack() {
+                        @Override
+                        public void onSuccess(ArrayList<Ingredient> pantry) {
+                            addIngredients(pantry, recipes, position);
+                        }
+
+                        @Override
+                        public void onFailure(String error) {
+                            //Do Stuff here
+                        }
+                    });
+                }
+            });
         }
+    }
+
+    private void addIngredients(ArrayList<Ingredient> pantry, ArrayList<Recipe> recipes, int recipePosition) {
+        viewModel.addIngredientsRecipe(pantry, recipes, recipePosition, new ShoppingListViewModel.AddCallback() {
+            @Override
+            public void onSuccess() {
+                //Do Stuff here
+            }
+
+            @Override
+            public void onFailure(String error) {
+                //Do Stuff here
+            }
+        });
     }
 
     @Override
@@ -61,13 +102,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
-        public TextView additionalTextView;
+        public Button additionalButton2;
         public Button additionalButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.nameTextView);
-            additionalTextView = itemView.findViewById(R.id.additionalTextView);
+            additionalButton2 = itemView.findViewById(R.id.additionalButton2);
             additionalButton = itemView.findViewById(R.id.additionalButton);
         }
     }
