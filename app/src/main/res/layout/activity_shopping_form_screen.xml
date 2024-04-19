@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.ShoppingListFormScreen">
+
+    <TextView
+        android:id="@+id/textViewShoppingNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Ingredient Name"
+        android:textSize="20sp"
+        tools:layout_editor_absoluteX="116dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <EditText
+        android:id="@+id/editTextShoppingIngredient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Enter Ingredient Name"
+        android:layout_below="@id/textViewShoppingNameLabel" />
+
+    <TextView
+        android:id="@+id/textViewQuantityLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextShoppingIngredient"
+        android:text="Quantity (cups/tbsps/tsps/oz)"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/editTextShopQuantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Enter quantity"
+        android:layout_below="@id/textViewQuantityLabel"/>
+
+    <TextView
+        android:id="@+id/textViewCaloriesPerServingLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Calories per serving/quantity"
+        android:textSize="20sp"
+        android:layout_below="@id/editTextShopQuantity"/>
+
+    <EditText
+        android:id="@+id/editTextShopCalories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Enter calories per serving"
+        android:layout_below="@id/textViewCaloriesPerServingLabel"/>
+
+    <Button
+        android:id="@+id/buttonSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Enter Ingredient"
+        android:layout_below="@id/editTextShopCalories" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_height="wrap_content"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_navigation_menu"
+        android:layout_alignParentBottom="true"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="651dp" />
+</RelativeLayout>

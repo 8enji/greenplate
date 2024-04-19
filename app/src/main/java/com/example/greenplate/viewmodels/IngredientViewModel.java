@@ -203,6 +203,5 @@ public class IngredientViewModel extends ViewModel {
 
     public interface IngredientUpdateCallback {
         void onIngredientUpdated(boolean success, String message);
-
     }
 }

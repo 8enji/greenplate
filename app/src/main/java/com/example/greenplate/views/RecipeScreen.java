@@ -69,8 +69,6 @@ public class RecipeScreen extends AppCompatActivity {
             }
         });
 
-
-
         buttonAdd.setOnClickListener(v -> {
             String recipeName = editTextRecipeName.getText().toString();
             String inputDetails = editTextInputDetails.getText().toString();
@@ -85,7 +83,7 @@ public class RecipeScreen extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.shoppingnav) {
-                    Intent intent = new Intent(RecipeScreen.this, ShoppingList.class);
+                    Intent intent = new Intent(RecipeScreen.this, ShoppingListScreen.class);
                     startActivity(intent);
                 } else if (item.getItemId() == R.id.recipenav) {
                     Intent intent = new Intent(RecipeScreen.this, RecipeScreen.class);
