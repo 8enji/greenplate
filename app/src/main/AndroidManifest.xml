@@ -16,6 +16,9 @@
             android:name=".views.IngredientsFormScreen"
             android:exported="false" />
         <activity
+            android:name=".views.ShoppingListFormScreen"
+            android:exported="false" />
+        <activity
             android:name=".views.PersonalInfoScreen"
             android:exported="false" />
         <activity
@@ -46,7 +49,7 @@
             android:name=".views.HomeScreen"
             android:exported="false" />
         <activity
-            android:name=".views.ShoppingList"
+            android:name=".views.ShoppingListScreen"
             android:exported="false" />
         <activity
             android:name=".views.RecipeDetailsScreen"

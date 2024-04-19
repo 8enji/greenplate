@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.ShoppingList">
+    tools:context=".views.ShoppingListScreen">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
@@ -13,97 +13,35 @@
         android:layout_height="wrap_content"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_menu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_alignParentBottom="true"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="651dp" />
 
-    <TextView
-        android:id="@+id/textViewIngredientNameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Ingredient Name"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/editTextShoppingIngredient"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Enter Ingredient Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewIngredientNameLabel" />
-
-    <TextView
-        android:id="@+id/textViewQuantityLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Quantity (cups/tbsps/tsps/oz)"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextShoppingIngredient" />
-
-    <EditText
-        android:id="@+id/editTextQuantity"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Enter quantity"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewQuantityLabel" />
-
-    <TextView
-        android:id="@+id/textViewCaloriesPerServingLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Calories per serving/quantity"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextQuantity" />
-
-    <EditText
-        android:id="@+id/editTextCaloriesPerServing"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Enter calories per serving"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewCaloriesPerServingLabel" />
-
     <Button
-        android:id="@+id/buttonSave"
+        android:id="@+id/itemButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Enter Ingredient"
+        android:text="Add Item"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextCaloriesPerServing" />
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/textViewShoppingList"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_below="@id/itemButton"
+        android:text="Shopping List"
+        android:textStyle="bold"
+        android:textSize="25dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ingredientsRecyclerView"
+        android:id="@+id/shoppingRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="290dp"
-        android:layout_below="@id/buttonSave"
-        android:layout_marginBottom="88dp"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        android:layout_height="280dp"
+        android:layout_below="@id/textViewShoppingList"
+        android:scrollbars="vertical" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

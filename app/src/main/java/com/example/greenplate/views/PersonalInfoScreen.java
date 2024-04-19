@@ -57,7 +57,7 @@ public class PersonalInfoScreen extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.shoppingnav) {
-                    Intent intent = new Intent(PersonalInfoScreen.this, ShoppingList.class);
+                    Intent intent = new Intent(PersonalInfoScreen.this, ShoppingListScreen.class);
                     startActivity(intent);
                 } else if (item.getItemId() == R.id.recipenav) {
                     Intent intent = new Intent(PersonalInfoScreen.this, RecipeScreen.class);

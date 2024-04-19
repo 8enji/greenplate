@@ -24,20 +24,20 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
     @Override
     public ShoppingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_ingredient, parent, false);
+                .inflate(R.layout.shopping_item, parent, false);
         return new ShoppingViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ShoppingViewHolder holder, int position) {
         Ingredient ingredient = ingredients.get(position);
-        holder.ingredientNameTextView.setText(String.format("%5s%5s%5s",
+        holder.ingredientSNameTextView.setText(String.format("%5s%5s%5s",
                 ingredient.getName(), ingredient.getQuantity(), ingredient.getUnits()));
 
-        holder.buttonIncrease.setOnClickListener(new View.OnClickListener() {
+        holder.buttonIncrease2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.increaseIngredientQuantity(ingredient, new ShoppingListViewModel().IngredientUpdateCallback() {
+                viewModel.increaseIngredientQuantity(ingredient, new ShoppingListViewModel.IngredientUpdateCallback() {
                     @Override
                     public void onIngredientUpdated(boolean success, String error) {
                         if (success) {
@@ -48,7 +48,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
                 });
             }
         });
-        holder.buttonDecrease.setOnClickListener(new View.OnClickListener() {
+        holder.buttonDecrease2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewModel.decreaseIngredientQuantity(ingredient, new ShoppingListViewModel.IngredientUpdateCallback() {
@@ -70,15 +70,15 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.Shoppi
     }
 
     static class ShoppingViewHolder extends RecyclerView.ViewHolder {
-        TextView ingredientNameTextView;
-        Button buttonIncrease;
-        Button buttonDecrease;
+        TextView ingredientSNameTextView;
+        Button buttonIncrease2;
+        Button buttonDecrease2;
 
         public ShoppingViewHolder(View itemView) {
             super(itemView);
-            ingredientNameTextView = itemView.findViewById(R.id.ingredientNameTextView);
-            buttonIncrease = itemView.findViewById(R.id.buttonIncrease);
-            buttonDecrease = itemView.findViewById(R.id.buttonDecrease);
+            ingredientSNameTextView = itemView.findViewById(R.id.ingredientSNameTextView);
+            buttonIncrease2 = itemView.findViewById(R.id.buttonIncrease2);
+            buttonDecrease2 = itemView.findViewById(R.id.buttonDecrease2);
         }
     }
 }
