@@ -59,7 +59,7 @@ public class IngredientsFormScreen extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.shoppingnav) {
-                    Intent intent = new Intent(IngredientsFormScreen.this, ShoppingList.class);
+                    Intent intent = new Intent(IngredientsFormScreen.this, ShoppingListScreen.class);
                     startActivity(intent);
                 } else if (item.getItemId() == R.id.recipenav) {
                     Intent intent = new Intent(IngredientsFormScreen.this, RecipeScreen.class);
