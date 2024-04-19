@@ -66,7 +66,8 @@ public class RecipeDetailsScreen extends AppCompatActivity {
 
         buttonCook.setOnClickListener(v -> {
             cookRecipe(recipeNameString);
-            finish();
+            Intent intentNew = new Intent(RecipeDetailsScreen.this, HomeScreen.class);
+            startActivity(intentNew);
         });
 
         buttonBack.setOnClickListener(v -> {
