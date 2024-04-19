@@ -220,8 +220,35 @@ public class ShoppingListViewModel extends ViewModel {
     }
 
     public void addIngredientsRecipe(ArrayList<Ingredient> pantry, ArrayList<Recipe> recipes, int recipePosition, AddCallback callback) {
-        //Implement this function
+        //Figure out which more ingredients we need
+        ArrayList<Ingredient> neededIngredients = new ArrayList<Ingredient>();
+        Recipe recipe = recipes.get(recipePosition);
+        ArrayList<Ingredient> recipeIngredients = recipe.getIngredients();
+        for (Ingredient i : recipeIngredients) {
+            String name = i.getName();
+            for (Ingredient pI : pantry) {
+                if (pI.getName().equalsIgnoreCase(name)) {
+                    //We have some of the ingredient
+                    if (pI.getQuantity() < i.getQuantity()) {
+                        //We need more of said ingredient
+                        addIngredient(name, ((i.getQuantity() - pI.getQuantity()) + i.getUnits()), Double.toString(i.getCalories()), new IngredientUpdateCallback() {
+                            @Override
+                            public void onSuccess() {
+                                //ingredient added, we may proceed
+                            }
+
+                            @Override
+                            public void onFailure(String error) {
+
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
     }
+
 
 
     public interface addIngredientCallback {
