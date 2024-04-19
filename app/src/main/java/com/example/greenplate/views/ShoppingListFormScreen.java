@@ -81,10 +81,10 @@ public class ShoppingListFormScreen extends AppCompatActivity {
             public void onIngredientUpdated(boolean success, String error) {
                 if (success) {
                     Toast.makeText(ShoppingListFormScreen.this,
-                            "Added Ingredient Successfully: " + error, Toast.LENGTH_SHORT).show();
+                            "Add to Shopping List: " + error, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(ShoppingListFormScreen.this,
-                            "Failed to add ingredient: " + error, Toast.LENGTH_SHORT).show();
+                            "Failed to add to Shopping list: " + error, Toast.LENGTH_SHORT).show();
                 }
             }
         });
