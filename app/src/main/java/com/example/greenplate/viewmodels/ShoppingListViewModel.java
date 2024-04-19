@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.greenplate.model.FirebaseDB;
 import com.example.greenplate.model.Ingredient;
+import com.example.greenplate.model.Recipe;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -218,6 +219,27 @@ public class ShoppingListViewModel extends ViewModel {
         }).addOnFailureListener(e -> System.out.println("Failed with exception: " + e.getMessage()));
     }
 
+    public void getPantry(String recipeName, GetPantryCallBack callback) {
+        ArrayList<Ingredient> pantry = new ArrayList<Ingredient>();
+        userRef.collection("pantry").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot ingredientDocuments = task.getResult();
+                for (DocumentSnapshot document : task.getResult()) {
+                    Map<String, Object> i = document.getData();
+                    Ingredient ingre = new Ingredient(i.get("name").toString(), (double) i.get("quantity"), i.get("units").toString(), (double) i.get("calories"));
+                    pantry.add(ingre);
+                }
+                callback.onSuccess(pantry);
+            } else {
+                callback.onFailure("Failed to access pantry: " + task.getException().getMessage());
+            }
+        }).addOnFailureListener(e -> System.out.println("Failed with exception: " + e.getMessage()));
+    }
+
+    public void addIngredientsRecipe(ArrayList<Ingredient> pantry, ArrayList<Recipe> recipes, int recipePosition, AddCallback callback) {
+        //Implement this function
+    }
+
 
     public interface addIngredientCallback {
         void onSuccess();
@@ -229,6 +251,21 @@ public class ShoppingListViewModel extends ViewModel {
     }
 
     public interface GetListCallback {
+        void onSuccess(ArrayList<Ingredient> pantry);
+        void onFailure(String error);
+    }
+
+    public interface RecipeCallback {
+        void onSuccess();
+        void onFailure(String error);
+    }
+
+    public interface AddCallback {
+        void onSuccess();
+        void onFailure(String error);
+    }
+
+    public interface GetPantryCallBack {
         void onSuccess(ArrayList<Ingredient> pantry);
         void onFailure(String error);
     }
