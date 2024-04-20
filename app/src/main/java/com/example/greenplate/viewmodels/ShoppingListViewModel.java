@@ -317,4 +317,41 @@ public class ShoppingListViewModel extends ViewModel {
         void onFailure(String error);
     }
 
+    public static String validateIngredientInput(String ingredientName, String quantity, String calories) {
+        System.out.println("Here");
+        if (ingredientName.isEmpty() || quantity.isEmpty()) {
+            return "Ingredient Name, Quantity, and Units are required";
+        }
+
+        String[] parts = quantity.split(" ");
+        if (parts.length < 2 || parts[0].isEmpty() || parts[1].isEmpty()) {
+            return "Both quantity and unit must be provided";
+        }
+
+        try {
+            double quantityDouble = Double.parseDouble(parts[0]);
+            if (quantityDouble < 0) {
+                return "Quantity cannot be negative";
+            }
+        } catch (NumberFormatException e) {
+            return "Quantity must be a valid number";
+        }
+
+        if (calories.isEmpty()) {
+            return "Calories are required";
+        }
+
+        try {
+            double caloriesDouble = Double.parseDouble(calories);
+            if (caloriesDouble < 0) {
+                return "Calories cannot be negative";
+            }
+        } catch (NumberFormatException e) {
+            return "Calories must be a valid number";
+        }
+
+        return ""; // No error found
+    }
+
+
 }
