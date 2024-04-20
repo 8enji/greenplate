@@ -28,4 +28,10 @@
         android:layout_below="@id/ingredientSNameTextView"
         android:layout_toEndOf="@id/buttonIncrease2"
         android:text="-"/>
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
 </LinearLayout>
