@@ -1,10 +1,13 @@
 package com.example.greenplate.viewmodels;
 
+import android.widget.Toast;
+
 import androidx.lifecycle.ViewModel;
 
 import com.example.greenplate.model.FirebaseDB;
 import com.example.greenplate.model.Ingredient;
 import com.example.greenplate.model.Recipe;
+import com.example.greenplate.views.ShoppingListFormScreen;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -237,8 +240,42 @@ public class ShoppingListViewModel extends ViewModel {
     }
 
     public void addIngredientsRecipe(ArrayList<Ingredient> pantry, ArrayList<Recipe> recipes, int recipePosition, AddCallback callback) {
-        //Implement this function
+        //Figure out which more ingredients we need
+        ArrayList<Ingredient> neededIngredients = new ArrayList<Ingredient>();
+        Recipe recipe = recipes.get(recipePosition);
+        ArrayList<Ingredient> recipeIngredients = recipe.getIngredients();
+        for (Ingredient i : recipeIngredients) {
+            String name = i.getName();
+            for (Ingredient pI : pantry) {
+                if (pI.getName().equalsIgnoreCase(name)) {
+                    //We have some of the ingredient
+                    if (pI.getQuantity() < i.getQuantity()) {
+                        //We need more of said ingredient
+                        addIngredient(name, ((i.getQuantity() - pI.getQuantity()) + " " + i.getUnits()), Double.toString(i.getCalories()), new IngredientUpdateCallback() {
+                            @Override
+                            public void onIngredientUpdated(boolean success, String error) {
+                                if (!success) {
+                                    callback.onFailure(error);
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    addIngredient(name, i.getQuantity() + " " + i.getUnits(), Double.toString(i.getCalories()), new IngredientUpdateCallback() {
+                        @Override
+                        public void onIngredientUpdated(boolean success, String error) {
+                            if (!success) {
+                                callback.onFailure(error);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+        callback.onSuccess();
+
     }
+
 
 
     public interface addIngredientCallback {
