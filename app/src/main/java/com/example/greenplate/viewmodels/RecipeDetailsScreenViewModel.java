@@ -112,6 +112,19 @@ public class RecipeDetailsScreenViewModel extends ViewModel {
         callback.onSuccess(totalCalories);
     }
 
+    public static Map<String, Double> processIngredients(HashMap<String, Ingredient> pantry, ArrayList<Ingredient> ingredients) {
+        Map<String, Double> updatedQuantities = new HashMap<>();
+        for (Ingredient ingredient : ingredients) {
+            if (pantry.containsKey(ingredient.getName())) {
+                Ingredient pantryIngredient = pantry.get(ingredient.getName());
+                double newQuantity = Math.max(0, pantryIngredient.getQuantity() - ingredient.getQuantity());
+                updatedQuantities.put(ingredient.getName(), newQuantity);
+            } else {
+                updatedQuantities.put(ingredient.getName(), -1.0);  // -1 to indicate missing ingredient
+            }
+        }
+        return updatedQuantities;
+    }
 
 
     public interface LoadRecipeCallback {
