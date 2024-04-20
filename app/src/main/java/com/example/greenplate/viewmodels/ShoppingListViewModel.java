@@ -17,6 +17,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ShoppingListViewModel extends ViewModel {
@@ -277,6 +278,12 @@ public class ShoppingListViewModel extends ViewModel {
         }
         callback.onSuccess();
 
+    }
+
+    public void buySelectedIngredients(List<Ingredient> ingredients, IngredientUpdateCallback callback) {
+        for (Ingredient ingredient : ingredients) {
+            buyIngredient(ingredient.getName(), String.valueOf(ingredient.getQuantity()), String.valueOf(ingredient.getCalories()), callback);
+        }
     }
 
 
