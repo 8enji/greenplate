@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
@@ -68,12 +69,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                     viewModel.getPantry(recipes.get(position).getName(), new ShoppingListViewModel.GetPantryCallBack() {
                         @Override
                         public void onSuccess(ArrayList<Ingredient> pantry) {
-                            addIngredients(pantry, recipes, position);
+                            addIngredients(v, pantry, recipes, position);
                         }
 
                         @Override
                         public void onFailure(String error) {
-                            //Do Stuff here
+                            Toast.makeText(v.getContext(),
+                                    "Failed to access pantry: " + error, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -81,16 +83,18 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         }
     }
 
-    private void addIngredients(ArrayList<Ingredient> pantry, ArrayList<Recipe> recipes, int recipePosition) {
+    private void addIngredients(View v, ArrayList<Ingredient> pantry, ArrayList<Recipe> recipes, int recipePosition) {
         viewModel.addIngredientsRecipe(pantry, recipes, recipePosition, new ShoppingListViewModel.AddCallback() {
             @Override
             public void onSuccess() {
-                //Do Stuff here
+                Toast.makeText(v.getContext(),
+                        "Added needed Ingredients to shopping list", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(String error) {
-                //Do Stuff here
+                Toast.makeText(v.getContext(),
+                        "Failed to add to Shopping list: " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }

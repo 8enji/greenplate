@@ -1,10 +1,13 @@
 package com.example.greenplate.viewmodels;
 
+import android.widget.Toast;
+
 import androidx.lifecycle.ViewModel;
 
 import com.example.greenplate.model.FirebaseDB;
 import com.example.greenplate.model.Ingredient;
 import com.example.greenplate.model.Recipe;
+import com.example.greenplate.views.ShoppingListFormScreen;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -248,21 +251,28 @@ public class ShoppingListViewModel extends ViewModel {
                     //We have some of the ingredient
                     if (pI.getQuantity() < i.getQuantity()) {
                         //We need more of said ingredient
-                        addIngredient(name, ((i.getQuantity() - pI.getQuantity()) + i.getUnits()), Double.toString(i.getCalories()), new IngredientUpdateCallback() {
+                        addIngredient(name, ((i.getQuantity() - pI.getQuantity()) + " " + i.getUnits()), Double.toString(i.getCalories()), new IngredientUpdateCallback() {
                             @Override
-                            public void onSuccess() {
-                                //ingredient added, we may proceed
-                            }
-
-                            @Override
-                            public void onFailure(String error) {
-
+                            public void onIngredientUpdated(boolean success, String error) {
+                                if (!success) {
+                                    callback.onFailure(error);
+                                }
                             }
                         });
                     }
+                } else {
+                    addIngredient(name, i.getQuantity() + " " + i.getUnits(), Double.toString(i.getCalories()), new IngredientUpdateCallback() {
+                        @Override
+                        public void onIngredientUpdated(boolean success, String error) {
+                            if (!success) {
+                                callback.onFailure(error);
+                            }
+                        }
+                    });
                 }
             }
         }
+        callback.onSuccess();
 
     }
 
