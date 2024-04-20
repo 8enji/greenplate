@@ -246,8 +246,10 @@ public class ShoppingListViewModel extends ViewModel {
         ArrayList<Ingredient> recipeIngredients = recipe.getIngredients();
         for (Ingredient i : recipeIngredients) {
             String name = i.getName();
+            boolean found = false;
             for (Ingredient pI : pantry) {
                 if (pI.getName().equalsIgnoreCase(name)) {
+                    found = true;
                     //We have some of the ingredient
                     if (pI.getQuantity() < i.getQuantity()) {
                         //We need more of said ingredient
@@ -260,16 +262,17 @@ public class ShoppingListViewModel extends ViewModel {
                             }
                         });
                     }
-                } else {
-                    addIngredient(name, i.getQuantity() + " " + i.getUnits(), Double.toString(i.getCalories()), new IngredientUpdateCallback() {
-                        @Override
-                        public void onIngredientUpdated(boolean success, String error) {
-                            if (!success) {
-                                callback.onFailure(error);
-                            }
-                        }
-                    });
                 }
+            }
+            if (!found) {
+                addIngredient(name, i.getQuantity() + " " + i.getUnits(), Double.toString(i.getCalories()), new IngredientUpdateCallback() {
+                    @Override
+                    public void onIngredientUpdated(boolean success, String error) {
+                        if (!success) {
+                            callback.onFailure(error);
+                        }
+                    }
+                });
             }
         }
         callback.onSuccess();
