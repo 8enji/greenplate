@@ -284,7 +284,7 @@ public class ShoppingListViewModel extends ViewModel {
 
     public void buySelectedIngredients(List<Ingredient> ingredients, IngredientUpdateCallback callback) {
         for (Ingredient ingredient : ingredients) {
-            buyIngredient(ingredient.getName(), String.valueOf(ingredient.getQuantity()), String.valueOf(ingredient.getCalories()), callback);
+            buyIngredient(ingredient.getName(), String.valueOf(ingredient.getQuantity()) + " " + ingredient.getUnits(), String.valueOf(ingredient.getCalories()), callback);
         }
     }
 
