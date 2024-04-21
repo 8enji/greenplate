@@ -49,7 +49,7 @@ public class Sprint4Test {
     }
 
 
-    // next two are recommended sprint 4 unit tests on the sprint 4 doc
+    // next two are recommended sprint 4 unit tests on the sprint 4 doc, the 2 listed
     @Test
     public void testMissingIngredientsCalculatedCorrectly() {
         HashMap<String, Ingredient> pantry = new HashMap<>();
