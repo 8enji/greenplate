@@ -111,7 +111,7 @@ public class Sprint4Test {
         assertEquals(-1.0, results.get("Butter"), 0.01);  // Butter should be marked as missing
     }
 
-    // Verifies the behavior when the recipe does not require any ingredients (i.e., the ingredient list is empty).
+    // Verifies the behavior when the recipe does not require any ingredients (i.e. the ingredient list is empty).
     @Test
     public void testProcessIngredientsWithNoIngredients() {
         HashMap<String, Ingredient> pantry = new HashMap<>();
