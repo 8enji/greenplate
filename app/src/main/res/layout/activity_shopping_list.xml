@@ -6,50 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".views.ShoppingListScreen">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
-        android:layout_gravity="bottom"
+    <TextView
+        android:id="@+id/textViewShoppingList"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_navigation_menu"
-        android:layout_alignParentBottom="true"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="651dp" />
+        android:text="Shopping List"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/shoppingRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/textViewShoppingList"
+        android:layout_above="@id/itemButton"
+        android:scrollbars="vertical"
+        android:layout_marginTop="8dp" />
 
     <Button
         android:id="@+id/itemButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Item"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.255" />
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/buyButton"
+        android:layout_marginBottom="16dp" />
 
-<!--    <Button-->
-<!--        android:id="@+id/buyButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Buy Selected Items"-->
-<!--        tools:layout_editor_absoluteX="120dp"-->
-<!--        tools:layout_editor_absoluteY="529dp" />-->
-
-    <TextView
-        android:id="@+id/textViewShoppingList"
+    <Button
+        android:id="@+id/buyButton"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_below="@id/itemButton"
-        android:text="Shopping List"
-        android:textStyle="bold"
-        android:textSize="25dp" />
+        android:layout_height="wrap_content"
+        android:text="Buy Selected Items"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/bottomNavigation"
+        android:layout_marginBottom="16dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/shoppingRecyclerView"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
-        android:layout_below="@id/textViewShoppingList"
-        android:scrollbars="vertical" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_navigation_menu" />
 
 </RelativeLayout>
