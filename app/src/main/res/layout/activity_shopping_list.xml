@@ -30,7 +30,7 @@
         android:id="@+id/itemButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Item"
+        android:text="Add Item to List"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/buyButton"
         android:layout_marginBottom="16dp" />
