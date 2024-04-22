@@ -41,6 +41,8 @@ public class ShoppingListScreen extends AppCompatActivity {
 
         addIngredientButton = findViewById(R.id.itemButton);
 
+        //add ingredient button, action with Intent
+
         addIngredientButton.setOnClickListener(v -> {
             Intent intent = new Intent(ShoppingListScreen.this, ShoppingListFormScreen.class);
             startActivity(intent);
