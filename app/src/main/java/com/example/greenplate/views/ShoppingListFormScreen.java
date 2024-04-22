@@ -75,6 +75,7 @@ public class ShoppingListFormScreen extends AppCompatActivity {
         });
     }
 
+    //add ingredient method
     private void addIngredient(String ingredientName, String quantity, String calories) {
         viewModel.addIngredient(ingredientName, quantity, calories, new ShoppingListViewModel.IngredientUpdateCallback() {
             @Override
